@@ -24,8 +24,8 @@
           </td>
         </tr>
       {% endfor %}
-      <form action="/bareme/new" method="POST" id="form_new">
-        <tr>
+      <form action="/bareme/new" method="POST">
+        <tr id="form_new">
           <td><input name="action" type="text" aria-label="nouvelle action" placeholder="Action" required></td>
           <td><input name="valeur" type="number" aria-label="nouvelle valeur" placeholder="Valeur" required></td>
           <td>
