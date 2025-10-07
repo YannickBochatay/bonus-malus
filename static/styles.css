@@ -12,8 +12,6 @@ caption {
 }
 #totaux td, #totaux th {
   text-align: center;
-}
-table td:not(:only-child) {
   box-sizing: border-box;
   width:50%;
 }
@@ -28,10 +26,10 @@ select.bonus {
 select.malus {
   background-color:#f44336;
 }
-input[value~="✗"] {
+input.icon-button {
   width:59px;
   margin:0;
 }
-input[value~="+"] {
-  width:59px;
+#form_new input {
+  margin:0;
 }
