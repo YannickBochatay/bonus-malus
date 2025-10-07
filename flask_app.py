@@ -37,9 +37,8 @@ def ajout_action():
   res = query_db("select * from barème where id=?", [id_action])
 
   if res:
-    action = res[0]["action"]
     valeur = res[0]["valeur"]
-    query_db("insert into actions (action, joueur, valeur) values (?, ?, ?)", [action, joueur, valeur])
+    query_db("insert into actions (action, joueur, valeur) values (?, ?, ?)", [id_action, joueur, valeur])
     return redirect("/")
   else:
     return render_template("erreur.html")
@@ -51,7 +50,10 @@ def affiche_user(user):
   if not check_user:
     return render_template("erreur.html")
   
-  data = query_db("select * from actions where joueur=? and action is not null order by date desc",[user])
+  data = query_db("select actions.id, barème.action, date, actions.valeur "\
+    "from actions, barème where barème.id = actions.action and joueur=? order by date desc",
+    [user]
+  )
 
   return render_template("user.html", data=data, user=user)
 
@@ -72,10 +74,21 @@ def nouvelle_action_bareme():
   query_db("insert into barème (action ,valeur) values (?, ?)", [action, valeur])
   return redirect(url_for("affiche_bareme", _anchor="form_new"))
 
+@app.route("/bareme/update/<id>", methods=['POST'])
+def maj_action_bareme(id):
+  action = request.form["action"]
+  valeur = request.form["valeur"]
+  query_db("update barème set action=?, valeur=? where id=?", [action, valeur, id])
+  return redirect(url_for("affiche_bareme"))
+
 @app.route("/bareme/delete/<id>", methods=['POST'])
 def supprime_action_bareme(id):
-  query_db("delete from barème where id=?",[id])
-  return redirect("/bareme")
+  try:
+    query_db("delete from barème where id=?",[id])
+  except BaseException:
+    return render_template("erreur.html", msg="Cette action a déjà été réalisée, vous ne pouvez pas la supprimer.")
+  
+  return redirect(url_for("affiche_bareme"))
 
 if __name__ == '__main__':
   app.run(debug=True)
