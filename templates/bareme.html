@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <table>
+    <caption>
+      Barème
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Action</th>
+        <th scope="col">Valeur</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for line in actions %}
+        <tr>
+          <td>{{ line.action }}</td>
+          <td>{{ line.valeur }}</td>
+          <td>
+            <form action="/bareme/delete/{{ line.id }}" method="POST">
+              <input type="submit" value="✗" class="outline secondary">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      <form action="/bareme/new" method="POST" id="form_new">
+        <tr>
+          <td><input name="action" type="text" aria-label="nouvelle action" placeholder="Action" required></td>
+          <td><input name="valeur" type="number" aria-label="nouvelle valeur" placeholder="Valeur" required></td>
+          <td>
+            <input type="submit" value="+">
+          </td>
+        </tr>
+      </form>
+    </tbody>
+  </table>
+{% endblock %}

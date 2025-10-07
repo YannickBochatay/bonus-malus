@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <table>
+    <caption>
+      {{ user }}
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Action</th>
+        <th scope="col">Date</th>
+        <th scope="col">Valeur</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for line in data %}
+        <tr>
+          <td>{{ line.action }}</td>
+          <td>{{ line.date }}</td>
+          <td>{{ line.valeur }}</td>
+          <td>
+            <form action="/{{ user }}/delete/{{ line.id }}" method="POST">
+              <input type="submit" value="✗" class="outline secondary">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

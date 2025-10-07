@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonus - Malus</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul>
+          <li id="logo">
+            <a href="/">
+              <img src="{{ url_for('static', filename='trophy.svg') }}" alt="logo trophée">
+              <strong>Bonus/Malus</strong>
+            </a>
+          </li>
+        </ul>
+        <ul>
+          <li><a href="/bareme">Barème</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="container" >
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

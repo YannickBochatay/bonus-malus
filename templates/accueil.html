@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% for total in totaux %}
+  <table id="totaux">
+    <caption>
+      <a href="/{{ total.joueur }}" title="voir les détails">{{ total.joueur }}</a>
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Bonus</th>
+        <th scope="col">Malus</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ bonus[loop.index0].score }}</td>
+        <td>{{ malus[loop.index0].score }}</td>
+      </tr>
+      <tr>
+        <td>
+          <form action="/validate" method="POST">
+            <input type="hidden" name="joueur" value="{{ total.joueur }}"/>
+            <select name="action" required class="bonus">
+              <option value="" disabled selected hidden>Ajouter</option>
+              {% for action in bonus_actions %}
+                <option value="{{ action.id }}">{{ action.action }} (+{{ action.valeur }})</option>
+              {% endfor %}
+            </select>
+          </form>
+        </td>
+        <td>
+          <form action="/validate" method="POST">
+            <input type="hidden" name="joueur" value="{{ total.joueur }}"/>
+            <select name="action" required class="malus">
+              <option value="" disabled selected hidden>Ajouter</option>
+              {% for action in malus_actions %}
+                <option value="{{ action.id }}">{{ action.action }} ({{ action.valeur }})</option>
+              {% endfor %}
+            </select>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">
+          <h4>Total : {{ total.score }}</h4>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  {% endfor %}
+  <script type="module" src="{{ url_for("static", filename="script.js")}}"></script>
+{% endblock %}
