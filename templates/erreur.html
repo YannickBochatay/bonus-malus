@@ -2,7 +2,13 @@
 
 {% block content %}
   <h1>Ouch</h1>
-  <p>Une erreur est survenue.</p>
+  <p>
+  {% if msg %}
+    {{ msg }}
+  {% else %}
+    Une erreur est survenue.
+  {% endif %}
+  </p>
   <a href="/">Retour à l'accueil</a>
 {% endblock %}
    
