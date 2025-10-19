@@ -21,12 +21,21 @@ def accueil():
                    "from joueurs left join actions on joueurs.nom=actions.joueur "\
                    "where valeur < 0 "\
                   "group by joueurs.nom")
+
+  depenses = query_db("select joueurs.nom as joueur, ifnull(cast(floor(sum(cout)*10) as int),0) as total "\
+                    "from joueurs left join depenses on joueurs.nom=depenses.joueur "\
+                    "group by joueurs.nom")
   
   bonus_actions = query_db("select * from bareme where valeur > 0")
   malus_actions = query_db("select * from bareme where valeur < 0")
     
   return render_template("accueil.html",
-    totaux=totaux, bonus=bonus, malus=malus, bonus_actions=bonus_actions, malus_actions=malus_actions
+    totaux=totaux,
+    bonus=bonus,
+    malus=malus,
+    depenses=depenses,
+    bonus_actions=bonus_actions,
+    malus_actions=malus_actions
   )
 
 @app.route("/<user>")

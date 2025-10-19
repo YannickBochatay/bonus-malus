@@ -45,7 +45,13 @@
     <tfoot>
       <tr>
         <td colspan="2">
-          <h4>Total : {{ total.score }}</h4>
+          <h4>Total :
+            <small>
+              {{ total.score }} gagnés - 
+              <a href="/{{ total.joueur }}#depenses">{{ depenses[loop.index0].total }} dépensés</a> =
+            </small>
+            {{ total.score - depenses[loop.index0].total }}
+          </h4>
         </td>
       </tr>
     </tfoot>
