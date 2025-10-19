@@ -19,7 +19,7 @@
       </tr>
       <tr>
         <td>
-          <form action="/validate" method="POST">
+          <form action="/{{ total.joueur }}/actions/add" method="POST">
             <input type="hidden" name="joueur" value="{{ total.joueur }}"/>
             <select name="action" required class="bonus">
               <option value="" disabled selected hidden>Ajouter</option>
@@ -30,7 +30,7 @@
           </form>
         </td>
         <td>
-          <form action="/validate" method="POST">
+          <form action="/{{ total.joueur }}/actions/add" method="POST">
             <input type="hidden" name="joueur" value="{{ total.joueur }}"/>
             <select name="action" required class="malus">
               <option value="" disabled selected hidden>Ajouter</option>
