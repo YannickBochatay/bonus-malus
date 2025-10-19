@@ -70,7 +70,7 @@ def supprime_depense(user, id):
 
 @app.route("/<user>/depenses/add", methods=['POST'])
 def ajout_depense(user):
-  cost = int(request.form["cost"])
+  cost = float(request.form["cost"])
   descript = request.form['descript']
   query_db("insert into depenses (cout, joueur, descript) values(?, ?, ?)",[cost, user, descript])
   return redirect("/" + user + "#depenses")
