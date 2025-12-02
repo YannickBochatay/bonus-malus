@@ -26,8 +26,8 @@ def accueil():
                     "from joueurs left join depenses on joueurs.nom=depenses.joueur "\
                     "group by joueurs.nom")
   
-  bonus_actions = query_db("select * from bareme where valeur > 0")
-  malus_actions = query_db("select * from bareme where valeur < 0")
+  bonus_actions = query_db("select * from bareme where valeur > 0 order by action")
+  malus_actions = query_db("select * from bareme where valeur < 0 order by action")
     
   return render_template("accueil.html",
     totaux=totaux,
@@ -86,7 +86,7 @@ def ajout_depense(user):
 
 @app.route("/bareme")
 def affiche_bareme():
-  actions = query_db("select * from bareme")
+  actions = query_db("select * from bareme order by action, valeur")
   return render_template("bareme.html", actions=actions)
 
 @app.route("/bareme/new", methods=['POST'])
