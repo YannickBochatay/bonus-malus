@@ -2,7 +2,7 @@
 
 {% block content %}
   {% for total in totaux %}
-  <table id="totaux">
+  <table id="bonus-malus">
     <caption>
       <a href="/{{ total.joueur }}" title="voir les détails">{{ total.joueur }}</a>
     </caption>
@@ -42,16 +42,26 @@
         </td>
       </tr>
     </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="2">
-          Gagnés : <a href="/{{ total.joueur }}#actions">{{ total.score }}</a>
-          &nbsp;&nbsp;-&nbsp;&nbsp;
-          Dépensés : <a href="/{{ total.joueur }}#depenses">{{ depenses[loop.index0].total }}</a>
-          <h4>Total : {{ total.score - depenses[loop.index0].total }}</h4>
-        </td>
-      </tr>
-    </tfoot>
+  </table>
+  <table id="bilan">
+    <tr>
+      <th>Total</th>
+      <td>
+        <a href="/{{ total.joueur }}#actions">{{ total.score }}</a>
+      </td>
+    </tr>
+    <tr>
+      <th>Dépenses</th>
+      <td>
+        <a href="/{{ total.joueur }}#depenses">{{ depenses[loop.index0].total }}</a>
+      </td>
+    </tr>
+    <tr>
+      <th>Reste</th>
+      <td>
+        {{ total.score - depenses[loop.index0].total }}
+      </td>
+    </tr>
   </table>
   {% endfor %}
   <script type="module" src="{{ url_for("static", filename="script.js")}}"></script>
