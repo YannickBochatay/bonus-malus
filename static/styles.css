@@ -43,6 +43,7 @@ select, select:invalid {
   color:white;
   text-align:center;
   padding-left:45px;
+  margin-bottom:0;
 }
 select.bonus {
   background-color:#04AA6D;
