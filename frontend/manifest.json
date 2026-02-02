@@ -1,0 +1,15 @@
+{
+  "name": "Bonus-malus : gestion des bonnes et mauvaises actions",
+  "short_name": "CT",
+  "description": "Définissez un barême et récompensez vos enfants",
+  "start_url": "/",
+  "theme_color": "#eeffee",
+  "background_color": "#eeffee",
+  "display": "standalone",
+  "icons": [
+        {
+      "src": "static/trophy.svg",
+      "sizes": "any"
+    }
+  ]
+}
