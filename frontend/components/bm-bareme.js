@@ -1,3 +1,9 @@
+import "./bm-bareme-action.js"
+import "./bm-bareme-add.js"
+import { state, getBaremeActions, onStateChange, offStateChange } from "../state/main-state.js"
+
+getBaremeActions()
+
 const template = document.createElement("template")
 
 template.innerHTML = `
@@ -13,28 +19,10 @@ template.innerHTML = `
       </tr>
     </thead>
     <tbody>
-      {% for line in actions %}
-        <tr>
-          <td>{{ line.action }}</td>
-          <td>{{ line.valeur }}</td>
-          <td>
-            <form action="/bareme/delete/{{ line.id }}" method="POST">
-              <input type="submit" value="✗" class="outline secondary icon-button">
-            </form>
-          </td>
-        </tr>
-      {% endfor %}
-      <form action="/bareme/new" method="POST">
-        <tr id="form_new">
-          <td><input name="action" type="text" aria-label="nouvelle action" placeholder="Action" required></td>
-          <td><input name="valeur" type="number" aria-label="nouvelle valeur" placeholder="Valeur" required></td>
-          <td>
-            <input type="submit" value="+" class="icon-button">
-          </td>
-        </tr>
-      </form>
     </tbody>
   </table>
+  <bm-bareme-add id="form_new"></bm-bareme-add>
+  
 `
 
 class BmBareme extends HTMLElement {
@@ -42,6 +30,31 @@ class BmBareme extends HTMLElement {
   constructor() {
     super()
     this.append(template.content.cloneNode(true))
+  }
+
+  #update = () => {
+    const tbody = this.querySelector("tbody")
+
+    for (const [index, action] of state.bareme.entries()) {
+      const tr = tbody.children[index] ?? document.createElement("tr", { is : "bm-bareme-action" })
+
+      tr.id = action.id
+      tr.action = action.action
+      tr.valeur = action.valeur
+
+      if (!tr.parentNode) tbody.append(tr)
+    }
+
+    while (tbody.children.length > state.bareme.length) tbody.lastElementChild.remove()
+  }
+
+  connectedCallback() {
+    this.#update()
+    onStateChange("bareme", this.#update)
+  }
+
+  disconnectedCallback() {
+    offStateChange("bareme", this.#update)
   }
 }
 

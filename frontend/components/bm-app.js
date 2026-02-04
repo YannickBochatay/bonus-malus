@@ -1,4 +1,5 @@
-import { state, onStateChange, getUsersSummary } from "../state/home-state.js"
+import "./bm-table.js"
+import { state, onStateChange, getUsersSummary } from "../state/main-state.js"
 
 getUsersSummary()
 

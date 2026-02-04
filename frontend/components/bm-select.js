@@ -1,23 +1,18 @@
-import { state, onStateChange, offStateChange, getActions, addUserAction } from "../state/home-state.js";
+import { state, onStateChange, offStateChange, getBaremeActions, addUserAction } from "../state/main-state.js";
 
-getActions()
+getBaremeActions()
 
 const template = document.createElement('template')
 
 template.innerHTML = `
-  <select>
-    <option value="" disabled selected hidden>Ajouter</option>
-  </select>
+  <option value="" disabled selected hidden>Ajouter</option>
 `
 
-class BmSelect extends HTMLElement {
-
-  #select
+class BmSelect extends HTMLSelectElement {
 
   constructor() {
     super()
     this.append(template.content.cloneNode(true))
-    this.#select = this.querySelector("select")
   }
 
   #setOptions = () => {
@@ -26,13 +21,13 @@ class BmSelect extends HTMLElement {
     })
 
     for (const [index, action] of actions.entries()) {
-      const option = this.#select.children[index + 1] ?? document.createElement("option")
+      const option = this.children[index + 1] ?? document.createElement("option")
       option.value = action.id
       option.textContent = `${action.action} (${action.valeur>0?"+":""}${action.valeur})`
-      if (!option.parentNode) this.#select.append(option)
+      if (!option.parentNode) this.append(option)
     }
 
-    while (this.#select.children.length > actions.length) this.#select.lastElementChild.remove()
+    while (this.children.length > actions.length) this.lastElementChild.remove()
   }
 
   get user() {
@@ -46,7 +41,7 @@ class BmSelect extends HTMLElement {
   #handleSubmit = async () => {
     let data = new FormData()
     data.append("joueur", this.user)
-    data.append("action", this.querySelector("select").value)
+    data.append("action", this.value)
 
     try {
       await addUserAction(this.user, data)
@@ -56,8 +51,8 @@ class BmSelect extends HTMLElement {
   }
 
   connectedCallback() {
-    this.#select.addEventListener("change", this.#handleSubmit)
-    this.#select.classList.add(this.type)
+    this.addEventListener("change", this.#handleSubmit)
+    this.classList.add(this.type)
     onStateChange("bareme", this.#setOptions)
     this.#setOptions()
   }
@@ -67,4 +62,4 @@ class BmSelect extends HTMLElement {
   }
 }
 
-customElements.define("bm-select", BmSelect)
+customElements.define("bm-select", BmSelect, { extends : "select" })

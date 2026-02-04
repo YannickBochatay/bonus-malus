@@ -26,35 +26,59 @@ caption {
   font-size:1.5rem;
   font-weight:bold;
 }
-#bonus-malus {
+.bonus-malus {
   margin-bottom:0;
+
+  td, th {
+    text-align: center;
+    box-sizing: border-box;
+    width:50%;
+  }
 }
-#bonus-malus td, #bonus-malus th {
-  text-align: center;
-  box-sizing: border-box;
-  width:50%;
-}
-#bilan {
+.bilan {
   width:250px;
   margin-left:auto;
   margin-right:auto;
 }
-select, select:invalid {
+select[is=bm-select], select[is=bm-select]:invalid {
   color:white;
   text-align:center;
   padding-left:45px;
   margin-bottom:0;
+
+  &.bonus {
+    background-color:#04AA6D;
+  }
+  &.malus {
+    background-color:#f44336;
+  }
 }
-select.bonus {
-  background-color:#04AA6D;
-}
-select.malus {
-  background-color:#f44336;
-}
-input.icon-button {
+input.icon-button, button.icon-button {
   width:59px;
   margin:0;
 }
-#form_new input {
-  margin:0;
+
+#form_new form {
+  display:flex;
+  align-items: center;
+  flex-wrap:wrap;
+
+  input {
+    margin:0;
+    &:nth-child(1) {
+      flex:2;
+      min-width:30ch;
+    }
+    &:nth-child(2) {
+      flex:1;
+      min-width:10ch;
+    }
+  }
+
+  input[type=submit] {
+    margin: calc(var(--pico-spacing)/ 2) var(--pico-spacing);
+  }
+}
+bm-bareme tbody td:last-child {
+  text-align: right;
 }

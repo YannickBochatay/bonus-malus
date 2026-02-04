@@ -31,7 +31,7 @@ export async function addDepense(data) {
 }
 
 async function remove(type, id) {
-  const res = await fetch(BACKEND_BASE_URL + user + "/action/" + id, {
+  const res = await fetch(BACKEND_BASE_URL + user + "/" + type + "/" + id, {
     method : "DELETE"
   })
   if (!res.ok) {
@@ -42,11 +42,11 @@ async function remove(type, id) {
 }
 
 export async function removeAction(id) {
-  await remove("action", id)
+  await remove("actions", id)
   return getUserActions()
 }
 
 export async function removeDepense(id) {
-  await remove("depense", id)
+  await remove("depenses", id)
   return getUserDepenses()
 }

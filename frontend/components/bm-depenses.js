@@ -1,3 +1,5 @@
+import "./bm-depense.js"
+import "./bm-depense-add.js"
 import { state, onStateChange, offStateChange, getUserDepenses } from "../state/user-state.js"
 
 getUserDepenses()

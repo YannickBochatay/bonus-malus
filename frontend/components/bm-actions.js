@@ -1,3 +1,4 @@
+import "./bm-action.js"
 import { state, onStateChange, offStateChange, getUserActions } from "../state/user-state.js";
 
 getUserActions()

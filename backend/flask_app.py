@@ -7,10 +7,16 @@ app.teardown_appcontext(close_db)
 
 @app.after_request
 def add_cors_headers(response):
+    response.headers.add("Connection", "keep-alive")
     response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Headers", "X-Requested-With")
     response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
     return response
+
+@app.route("/<path:path>", methods=["OPTIONS"])
+def handle_options(path):
+    return NULL, 204
+
 
 @app.route("/")
 def joueurs(): 
@@ -39,6 +45,40 @@ def joueurs():
     })
 
   return jsonify(res)
+
+@app.route("/bareme", methods=['GET'])
+def affiche_bareme():
+  actions = query_db("select * from bareme order by action, valeur")
+  return jsonify(actions)
+
+@app.route("/bareme", methods=['POST'])
+def nouvelle_action_bareme():
+  action = request.form["action"]
+  valeur = request.form["valeur"]
+  query_db("insert into bareme (action ,valeur) values (?, ?)", [action, valeur])
+  return jsonify({
+    "action" : action,
+    "valeur" : valeur
+  })
+
+@app.route("/bareme/<id>", methods=['PUT'])
+def maj_action_bareme(id):
+  action = request.form["action"]
+  valeur = request.form["valeur"]
+  query_db("update bareme set action=?, valeur=? where id=?", [action, valeur, id])
+  return jsonify({
+    "action" : action,
+    "valeur" : valeur
+  })
+
+@app.route("/bareme/<id>", methods=['DELETE'])
+def supprime_action_bareme(id):
+  try:
+    query_db("delete from bareme where id=?",[id])
+  except BaseException:
+    return jsonify({ "details" : "Cette action a déjà été réalisée, vous ne pouvez pas la supprimer." }), 500
+  
+  return jsonify({ "details" : f"action {id} supprimée"})
 
 @app.route("/<user>")
 def resume_joueur(user): 
@@ -133,41 +173,6 @@ def supprime_action(user, id):
 def supprime_depense(user, id):
   query_db("delete from depenses where id=?",[id])
   return jsonify({ "details" : f"depense {id} deleted"})
-
-
-@app.route("/bareme", methods=['GET'])
-def affiche_bareme():
-  actions = query_db("select * from bareme order by action, valeur")
-  return jsonify(actions)
-
-@app.route("/bareme", methods=['POST'])
-def nouvelle_action_bareme():
-  action = request.form["action"]
-  valeur = request.form["valeur"]
-  query_db("insert into bareme (action ,valeur) values (?, ?)", [action, valeur])
-  return jsonify({
-    "action" : action,
-    "valeur" : valeur
-  })
-
-@app.route("/bareme/<id>", methods=['PUT'])
-def maj_action_bareme(id):
-  action = request.form["action"]
-  valeur = request.form["valeur"]
-  query_db("update bareme set action=?, valeur=? where id=?", [action, valeur, id])
-  return jsonify({
-    "action" : action,
-    "valeur" : valeur
-  })
-
-@app.route("/bareme/<id>", methods=['DELETE'])
-def supprime_action_bareme(id):
-  try:
-    query_db("delete from bareme where id=?",[id])
-  except BaseException:
-    return jsonify({ "details" : "Cette action a déjà été réalisée, vous ne pouvez pas la supprimer." }), 500
-  
-  return jsonify({ "details" : f"action {id} supprimée"})
 
 
 if __name__ == '__main__':

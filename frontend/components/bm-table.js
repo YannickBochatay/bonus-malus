@@ -1,7 +1,9 @@
+import "./bm-select.js"
+
 const template = document.createElement('template')
 
 template.innerHTML = `
-  <table>
+  <table class="bonus-malus">
     <caption>
       <a href="user.html?user=xxx" title="voir les détails" class="user"></a>
     </caption>
@@ -18,15 +20,15 @@ template.innerHTML = `
       </tr>
       <tr>
         <td>
-          <bm-select user="" type="bonus">
+          <select user="" type="bonus" is="bm-select">
         </td>
         <td>
-          <bm-select user="" type="malus">
+          <select user="" type="malus" is="bm-select">
         </td>
       </tr>
     </tbody>
   </table>
-  <table>
+  <table class="bilan">
     <tr>
       <th>Total</th>
       <td>

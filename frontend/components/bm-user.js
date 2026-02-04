@@ -1,3 +1,6 @@
+import "./bm-actions.js"
+import "./bm-depenses.js"
+import "./bm-router.js"
 import { user } from "../state/utils.js"
 
 const template = document.createElement("template");
@@ -19,6 +22,23 @@ class BmUser extends HTMLElement {
   constructor() {
     super()
     this.append(template.content.cloneNode(true))
+  }
+
+  #handleHashChange = () => {
+    scrollTo({ top : 0 })
+    this.querySelectorAll("a").forEach(node => {
+      if (node.href.includes(location.hash)) node.classList.remove("outline")
+      else node.classList.add("outline")
+    })
+  }
+
+  connectedCallback() {
+    addEventListener("hashchange", this.#handleHashChange)
+    this.#handleHashChange()
+  }
+
+  disconnectedCallback() {
+    removeEventListener("hashchange", this.#handleHashChange)
   }
 }
 

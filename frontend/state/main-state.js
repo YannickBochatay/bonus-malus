@@ -25,7 +25,30 @@ export async function addUserAction(user, data) {
   return getUsersSummary()
 }
 
-export async function getActions() {
+export async function addBaremeAction(data) {
+  const res = await fetch(BACKEND_BASE_URL + "bareme", {
+    method : "POST",
+    body : data
+  })
+  if (!res.ok) {
+    let msg = await res.json()
+    throw new Error(msg.details)
+  }
+  return getBaremeActions()
+}
+
+export async function getBaremeActions() {
   const res = await fetch(BACKEND_BASE_URL + "bareme")
   state.bareme = await res.json()
+}
+
+export async function removeBaremeAction(id) {
+  const res = await fetch(BACKEND_BASE_URL + "bareme/" + id, {
+    method : "DELETE"
+  })
+  if (!res.ok) {
+    let msg = await res.json()
+    throw new Error(msg.details)
+  }
+  return getBaremeActions();
 }
