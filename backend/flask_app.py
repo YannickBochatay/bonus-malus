@@ -5,10 +5,12 @@ app = Flask(__name__)
 
 app.teardown_appcontext(close_db)
 
-def json_cors(data):
-  response = jsonify(data)
-  response.headers.add("Access-Control-Allow-Origin", "*")
-  return response
+@app.after_request
+def add_cors_headers(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+    return response
 
 @app.route("/")
 def joueurs(): 
@@ -36,7 +38,7 @@ def joueurs():
       "depenses" : depenses[index]["total"]
     })
 
-  return json_cors(res)
+  return jsonify(res)
 
 @app.route("/<user>")
 def resume_joueur(user): 
@@ -52,7 +54,7 @@ def resume_joueur(user):
                     "from joueurs left join depenses on joueurs.nom=depenses.joueur "\
                     "where joueurs.nom = ?", [user])
 
-  return json_cors({
+  return jsonify({
     "bonus" : bonus[0]["score"],
     "malus" : malus[0]["score"],
     "depenses" : depenses[0]["total"]
@@ -63,25 +65,25 @@ def actions_joueur(user):
   check_user = query_db("select nom from joueurs where nom=?", [user])
   
   if not check_user:
-    return json_cors({ "details" : "joueur inconnu"}), 404
+    return jsonify({ "details" : "joueur inconnu"}), 404
   
   actions = query_db("select actions.id, bareme.action, date, actions.valeur "\
     "from actions, bareme where bareme.id = actions.action and joueur=? order by date desc",
     [user]
   )
 
-  return json_cors(actions)
+  return jsonify(actions)
 
 @app.route("/<user>/depenses", methods=["GET"])
 def depenses_joueur(user):
   check_user = query_db("select nom from joueurs where nom=?", [user])
   
   if not check_user:
-    return json_cors({ "details" : "joueur inconnu"}), 404
+    return jsonify({ "details" : "joueur inconnu"}), 404
   
   depenses = query_db("select * from depenses where joueur=? order by date desc", [user])
 
-  return json_cors(depenses)
+  return jsonify(depenses)
 
 @app.route("/<user>/actions", methods=['POST'])
 def ajout_action(user):
@@ -94,28 +96,28 @@ def ajout_action(user):
     query_db("insert into actions (action, joueur, valeur) values (?, ?, ?)", [id_action, user, valeur])
 
     print("ok")
-    return json_cors({
+    return jsonify({
       "id" : id_action,
       "user" : user,
       "valeur" : valeur
     })
   else:
-    return json_cors({ "details" : f"{id_action} : action inconnue"}), 404
+    return jsonify({ "details" : f"{id_action} : action inconnue"}), 404
 
 @app.route("/<user>/depenses", methods=['POST'])
 def ajout_depense(user):
   check_user = query_db("select nom from joueurs where nom=?", [user])
   
   if not check_user:
-    return json_cors({ "details" : "joueur inconnu"}), 404
+    return jsonify({ "details" : "joueur inconnu"}), 404
 
-  if not "cost" in request.form or not 'descript' in request.form:
-    return json_cors({ "details" : "les champs cost et/ou descript sont manquants"}), 500
+  if "cost" not in request.form or 'descript' not in request.form:
+    return jsonify({ "details" : "les champs cost et/ou descript sont manquants"}), 500
 
   cost = float(request.form["cost"])
   descript = request.form['descript']
   query_db("insert into depenses (cout, joueur, descript) values(?, ?, ?)",[cost, user, descript])
-  return json_cors({
+  return jsonify({
     "cost" : cost,
     "user" : user,
     "descript" : descript
@@ -124,26 +126,26 @@ def ajout_depense(user):
 @app.route("/<user>/actions/<id>", methods=['DELETE'])
 def supprime_action(user, id):
   query_db("delete from actions where id=?",[id])
-  return json_cors({ "details" : f"action {id} deleted"})
+  return jsonify({ "details" : f"action {id} deleted"})
 
 
 @app.route("/<user>/depenses/<id>", methods=['DELETE'])
 def supprime_depense(user, id):
   query_db("delete from depenses where id=?",[id])
-  return json_cors({ "details" : f"depense {id} deleted"})
+  return jsonify({ "details" : f"depense {id} deleted"})
 
 
 @app.route("/bareme", methods=['GET'])
 def affiche_bareme():
   actions = query_db("select * from bareme order by action, valeur")
-  return json_cors(actions)
+  return jsonify(actions)
 
 @app.route("/bareme", methods=['POST'])
 def nouvelle_action_bareme():
   action = request.form["action"]
   valeur = request.form["valeur"]
   query_db("insert into bareme (action ,valeur) values (?, ?)", [action, valeur])
-  return json_cors({
+  return jsonify({
     "action" : action,
     "valeur" : valeur
   })
@@ -153,7 +155,7 @@ def maj_action_bareme(id):
   action = request.form["action"]
   valeur = request.form["valeur"]
   query_db("update bareme set action=?, valeur=? where id=?", [action, valeur, id])
-  return json_cors({
+  return jsonify({
     "action" : action,
     "valeur" : valeur
   })
@@ -163,9 +165,9 @@ def supprime_action_bareme(id):
   try:
     query_db("delete from bareme where id=?",[id])
   except BaseException:
-    return json_cors({ "details" : "Cette action a déjà été réalisée, vous ne pouvez pas la supprimer." }), 500
+    return jsonify({ "details" : "Cette action a déjà été réalisée, vous ne pouvez pas la supprimer." }), 500
   
-  return json_cors({ "details" : f"action {id} supprimée"})
+  return jsonify({ "details" : f"action {id} supprimée"})
 
 
 if __name__ == '__main__':
