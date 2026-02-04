@@ -1,18 +1,32 @@
-export const BACKEND_BASE_URL = "http://127.0.0.1:5000/"
+import { createState } from "./createState.js"
+
+const initialState = {
+  users : [],
+  bareme : []
+}
+
+export const { state, onStateChange, offStateChange } = createState(initialState)
+
+const BACKEND_BASE_URL = "http://127.0.0.1:5000/"
 
 export async function getUsersSummary() {
   const res = await fetch(BACKEND_BASE_URL)
-  return await res.json()
+  state.users = await res.json()
 }
 
-export function addUserAction(user, data) {
-  return fetch(BACKEND_BASE_URL + user + "/actions", {
+export async function addUserAction(user, data) {
+  const res = await fetch(BACKEND_BASE_URL + user + "/actions", {
     method : "POST",
     body : data
   })
+  if (!res.ok) {
+    let msg = await res.json()
+    throw new Error(msg.details)
+  }
+  return getUsersSummary()
 }
 
-export async function getActions(type) {
-  const res = await fetch(BACKEND_BASE_URL + type)
-  return await res.json()
+export async function getActions() {
+  const res = await fetch(BACKEND_BASE_URL + "bareme")
+  state.bareme = await res.json()
 }

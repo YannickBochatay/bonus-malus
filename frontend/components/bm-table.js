@@ -3,7 +3,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <table>
     <caption>
-      <a href="<user>/details#actions" title="voir les détails" class="user"></a>
+      <a href="<user>/details#actions" title="voir les détails" class="user" class="user"></a>
     </caption>
     <thead>
       <tr>
@@ -74,6 +74,7 @@ class BmTable extends HTMLElement {
   }
 
   async #update() { 
+    this.querySelector(".user").textContent = this.user
     this.querySelector(".total").textContent = this.bonus - this.malus
     this.querySelector(".bonus").textContent = this.bonus
     this.querySelector(".malus").textContent = this.malus

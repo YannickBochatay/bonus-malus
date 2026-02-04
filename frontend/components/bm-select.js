@@ -1,38 +1,38 @@
-import { getActions, addUserAction } from "../state.js";
+import { state, onStateChange, offStateChange, getActions, addUserAction } from "../state.js";
 
-const template = document.createElement('template');
+getActions()
+
+const template = document.createElement('template')
 
 template.innerHTML = `
-  <form>
-    <input type="hidden" name="joueur" value=""/>
-    <select name="action" required>
-      <option value="" disabled selected hidden>Ajouter</option>
-    </select>
-  </form>
+  <select>
+    <option value="" disabled selected hidden>Ajouter</option>
+  </select>
 `
 
 class BmSelect extends HTMLElement {
 
-  #form
+  #select
 
   constructor() {
     super()
     this.append(template.content.cloneNode(true))
-    this.#form = this.querySelector('form')
+    this.#select = this.querySelector("select")
   }
 
-  async #setOptions() {
-    const actions = await getActions(this.type)
-    const options = []
+  #setOptions = () => {
+    const actions = state.bareme.filter(action => {
+      return action.valeur > 0 && this.type === "bonus" || action.valeur < 0 && this.type === "malus"
+    })
 
-    for (const action of actions) {
-      const option = document.createElement("option")
+    for (const [index, action] of actions.entries()) {
+      const option = this.#select.children[index + 1] ?? document.createElement("option")
       option.value = action.id
-      option.textContent = `${action.action} (${action.valeur})`
-      options.push(option)
+      option.textContent = `${action.action} (${action.valeur>0?"+":""}${action.valeur})`
+      if (!option.parentNode) this.#select.append(option)
     }
 
-    this.querySelector("select").append(...options)
+    while (this.#select.children.length > actions.length) this.#select.lastElementChild.remove()
   }
 
   get user() {
@@ -44,22 +44,27 @@ class BmSelect extends HTMLElement {
   }
 
   #handleSubmit = async () => {
-    this.querySelector("input[name=joueur]").value = this.user
+    let data = new FormData()
+    data.append("joueur", this.user)
+    data.append("action", this.querySelector("select").value)
 
     try {
-      await addUserAction(this.user, new FormData(this.#form))
-      location.reload()
+      await addUserAction(this.user, data)
     } catch (e) {
       console.error(e)
     }
   }
 
   connectedCallback() {
-    this.#form.addEventListener("change", this.#handleSubmit)
-    this.querySelector("select").classList.add(this.type)
+    this.#select.addEventListener("change", this.#handleSubmit)
+    this.#select.classList.add(this.type)
+    onStateChange("bareme", this.#setOptions)
     this.#setOptions()
   }
 
+  disconnectedCallback() {
+    offStateChange("bareme", this.#setOptions)
+  }
 }
 
 customElements.define("bm-select", BmSelect)
