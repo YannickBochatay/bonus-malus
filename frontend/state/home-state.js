@@ -1,4 +1,5 @@
 import { createState } from "./createState.js"
+import { BACKEND_BASE_URL } from "./utils.js"
 
 const initialState = {
   users : [],
@@ -6,8 +7,6 @@ const initialState = {
 }
 
 export const { state, onStateChange, offStateChange } = createState(initialState)
-
-const BACKEND_BASE_URL = "http://127.0.0.1:5000/"
 
 export async function getUsersSummary() {
   const res = await fetch(BACKEND_BASE_URL)

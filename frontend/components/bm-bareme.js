@@ -1,0 +1,48 @@
+const template = document.createElement("template")
+
+template.innerHTML = `
+  <table>
+    <caption>
+      Barème
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Action</th>
+        <th scope="col">Valeur</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for line in actions %}
+        <tr>
+          <td>{{ line.action }}</td>
+          <td>{{ line.valeur }}</td>
+          <td>
+            <form action="/bareme/delete/{{ line.id }}" method="POST">
+              <input type="submit" value="✗" class="outline secondary icon-button">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      <form action="/bareme/new" method="POST">
+        <tr id="form_new">
+          <td><input name="action" type="text" aria-label="nouvelle action" placeholder="Action" required></td>
+          <td><input name="valeur" type="number" aria-label="nouvelle valeur" placeholder="Valeur" required></td>
+          <td>
+            <input type="submit" value="+" class="icon-button">
+          </td>
+        </tr>
+      </form>
+    </tbody>
+  </table>
+`
+
+class BmBareme extends HTMLElement {
+
+  constructor() {
+    super()
+    this.append(template.content.cloneNode(true))
+  }
+}
+
+customElements.define("bm-bareme", BmBareme)

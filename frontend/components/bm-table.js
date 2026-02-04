@@ -3,7 +3,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <table>
     <caption>
-      <a href="<user>/details#actions" title="voir les détails" class="user" class="user"></a>
+      <a href="user.html?user=xxx" title="voir les détails" class="user"></a>
     </caption>
     <thead>
       <tr>
@@ -30,13 +30,13 @@ template.innerHTML = `
     <tr>
       <th>Total</th>
       <td>
-        <a href="<user>/details#actions" class="total"></a>
+        <a href="user.html?user=xxx" class="total"></a>
       </td>
     </tr>
     <tr>
       <th>Dépenses</th>
       <td>
-        <a href="<user>/details#depenses" class="depenses"></a>
+        <a href="user.html?user=xxx#depenses" class="depenses"></a>
       </td>
     </tr>
     <tr>
@@ -86,7 +86,7 @@ class BmTable extends HTMLElement {
     this.querySelector(".user").textContent = this.user
         
     for (const node of this.querySelectorAll("a")) {
-      node.href = node.href.replace("<user>", this.user)
+      node.href = node.href.replace(/user=\w+/, "user=" + this.user)
     }
 
     for (const node of this.querySelectorAll("[user]")) {
