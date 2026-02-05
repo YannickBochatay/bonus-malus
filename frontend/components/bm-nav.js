@@ -6,7 +6,7 @@ template.innerHTML = `
       <li id="logo">
         <a href="./">
           <img src="assets/trophy.svg" alt="logo trophée">
-          <strong>Bonus/Malus</strong>
+          <h1>Bonus/Malus</h1>
         </a>
       </li>
     </ul>

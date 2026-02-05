@@ -51,6 +51,7 @@ class BmSelect extends HTMLSelectElement {
   connectedCallback() {
     this.addEventListener("change", this.#handleSubmit)
     this.classList.add(this.type)
+    this.setAttribute("aria-label", "sélection d'un " + this.type)
     onStateChange("bareme", this.#setOptions)
     this.#setOptions()
   }

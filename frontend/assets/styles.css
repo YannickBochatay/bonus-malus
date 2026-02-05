@@ -1,3 +1,8 @@
+h1 {
+  display:inline;
+  font-size:var(--pico-font-size);
+  color:inherit;
+}
 h2 {
   text-align: center;
 }
