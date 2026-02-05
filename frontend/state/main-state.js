@@ -1,5 +1,4 @@
-import { createState } from "./createState.js"
-import { fetchJSON } from "./utils.js"
+import { createState, fetchJSON } from "./utils.js"
 
 const initialState = {
   users : [],
@@ -13,19 +12,21 @@ export async function getUsersSummary() {
 }
 
 export async function addUserAction(user, data) {
-  await fetchJSON(user + "/actions", {
+  const msg = await fetchJSON(user + "/actions", {
     method : "POST",
     body : data
   })
-  return getUsersSummary()
+  await getUsersSummary()
+  return msg
 }
 
 export async function addBaremeAction(data) {
-  await fetchJSON("bareme", {
+  const msg = await fetchJSON("bareme", {
     method : "POST",
     body : data
   })
-  return getBaremeActions()
+  await getBaremeActions()
+  return msg
 }
 
 export async function getBaremeActions() {
@@ -33,8 +34,9 @@ export async function getBaremeActions() {
 }
 
 export async function removeBaremeAction(id) {
-  await fetchJSON("bareme/" + id, {
+  const msg = await fetchJSON("bareme/" + id, {
     method : "DELETE"
   })
-  return getBaremeActions();
+  await getBaremeActions();
+  return msg
 }

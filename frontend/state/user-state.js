@@ -1,5 +1,4 @@
-import { createState } from "./createState.js"
-import { user, fetchJSON } from "./utils.js"
+import { user, createState, fetchJSON } from "./utils.js"
 
 const initialState = {
   actions : [],
@@ -17,26 +16,28 @@ export async function getUserDepenses() {
 }
 
 export async function addDepense(data) {
-  await fetchJSON(user + "/depenses", {
+  const msg = await fetchJSON(user + "/depenses", {
     method : "POST",
     body : data
   })
-  return getUserDepenses()
+  await getUserDepenses()
+  return msg
 }
 
 async function remove(type, id) {
-  const res = await fetchJSON(user + "/" + type + "/" + id, {
+  return await fetchJSON(user + "/" + type + "/" + id, {
     method : "DELETE"
   })
-  return res;
 }
 
 export async function removeAction(id) {
-  await remove("actions", id)
-  return getUserActions()
+  const msg = await remove("actions", id)
+  await getUserActions()
+  return msg
 }
 
 export async function removeDepense(id) {
-  await remove("depenses", id)
-  return getUserDepenses()
+  const msg = await remove("depenses", id)
+  await getUserDepenses()
+  return msg
 }
