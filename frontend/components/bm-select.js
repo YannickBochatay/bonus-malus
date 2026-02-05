@@ -1,4 +1,5 @@
 import { state, onStateChange, offStateChange, getBaremeActions, addUserAction } from "../state/main-state.js";
+import { withToast } from "./bm-toast.js";
 
 getBaremeActions()
 
@@ -43,12 +44,8 @@ class BmSelect extends HTMLSelectElement {
     data.append("joueur", this.user)
     data.append("action", this.value)
 
-    try {
-      await addUserAction(this.user, data)
-      this.value = ""
-    } catch (e) {
-      console.error(e)
-    }
+    withToast(addUserAction(this.user, data))
+    this.value = ""
   }
 
   connectedCallback() {
