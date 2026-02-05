@@ -10,6 +10,30 @@ def add_cors_headers(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+def check_user(fct):
+  def wrapper(user):
+    check_user = query_db("select nom from joueurs where nom=?", [user])
+    
+    if not check_user:
+      return send_error("joueur inconnu", 404)
+    
+    return fct()
+  
+  return wrapper
+
+def send_error(msg, code = 400):
+  return jsonify({ "details" : msg}), code
+
+def error_handler(fct):
+  def wrapper(*args, **kwargs):
+    try:
+      return fct(*args, **kwargs)
+    except BaseException:
+      return send_error("Requête incorrecte")
+  
+  return wrapper
+
+
 @app.route("/")
 def joueurs(): 
   bonus = query_db("select joueurs.nom as joueur, sum(valeur) as score "\
@@ -43,6 +67,7 @@ def affiche_bareme():
   actions = query_db("select * from bareme order by action, valeur")
   return jsonify(actions)
 
+@error_handler
 @app.route("/bareme", methods=['POST'])
 def nouvelle_action_bareme():
   action = request.form["action"]
@@ -53,6 +78,7 @@ def nouvelle_action_bareme():
     "valeur" : valeur
   })
 
+@error_handler
 @app.route("/bareme/<id>", methods=['PUT'])
 def maj_action_bareme(id):
   action = request.form["action"]
@@ -63,15 +89,17 @@ def maj_action_bareme(id):
     "valeur" : valeur
   })
 
+@error_handler
 @app.route("/bareme/<id>", methods=['DELETE'])
 def supprime_action_bareme(id):
   try:
     query_db("delete from bareme where id=?",[id])
   except BaseException:
-    return jsonify({ "details" : "Cette action a déjà été réalisée, vous ne pouvez pas la supprimer." }), 500
+    return send_error("Cette action a déjà été réalisée, vous ne pouvez pas la supprimer.")
   
   return jsonify({ "details" : f"action {id} supprimée"})
 
+@check_user
 @app.route("/<user>")
 def resume_joueur(user): 
   bonus = query_db("select sum(valeur) as score "\
@@ -92,13 +120,10 @@ def resume_joueur(user):
     "depenses" : depenses[0]["total"]
   })
 
+@check_user
 @app.route("/<user>/actions", methods=["GET"])
 def actions_joueur(user):
-  check_user = query_db("select nom from joueurs where nom=?", [user])
-  
-  if not check_user:
-    return jsonify({ "details" : "joueur inconnu"}), 404
-  
+
   actions = query_db("select actions.id, bareme.action, date, actions.valeur "\
     "from actions, bareme where bareme.id = actions.action and joueur=? order by date desc",
     [user]
@@ -106,17 +131,15 @@ def actions_joueur(user):
 
   return jsonify(actions)
 
+@check_user
 @app.route("/<user>/depenses", methods=["GET"])
 def depenses_joueur(user):
-  check_user = query_db("select nom from joueurs where nom=?", [user])
-  
-  if not check_user:
-    return jsonify({ "details" : "joueur inconnu"}), 404
-  
   depenses = query_db("select * from depenses where joueur=? order by date desc", [user])
 
   return jsonify(depenses)
 
+@check_user
+@error_handler
 @app.route("/<user>/actions", methods=['POST'])
 def ajout_action(user):
   id_action = int(request.form["action"])
@@ -136,15 +159,12 @@ def ajout_action(user):
   else:
     return jsonify({ "details" : f"{id_action} : action inconnue"}), 404
 
+@check_user
+@error_handler
 @app.route("/<user>/depenses", methods=['POST'])
 def ajout_depense(user):
-  check_user = query_db("select nom from joueurs where nom=?", [user])
-  
-  if not check_user:
-    return jsonify({ "details" : "joueur inconnu"}), 404
-
   if "cost" not in request.form or 'descript' not in request.form:
-    return jsonify({ "details" : "les champs cost et/ou descript sont manquants"}), 500
+    return jsonify({ "details" : "les champs cost et/ou descript sont manquants"}), 400
 
   cost = float(request.form["cost"])
   descript = request.form['descript']
@@ -155,12 +175,13 @@ def ajout_depense(user):
     "descript" : descript
   })
 
+@error_handler
 @app.route("/<user>/actions/<id>", methods=['DELETE'])
 def supprime_action(user, id):
   query_db("delete from actions where id=?",[id])
   return jsonify({ "details" : f"action {id} deleted"})
 
-
+@error_handler
 @app.route("/<user>/depenses/<id>", methods=['DELETE'])
 def supprime_depense(user, id):
   query_db("delete from depenses where id=?",[id])
