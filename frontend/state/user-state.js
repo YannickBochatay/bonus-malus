@@ -1,5 +1,5 @@
 import { createState } from "./createState.js"
-import { BACKEND_BASE_URL, user } from "./utils.js"
+import { user, fetchJSON } from "./utils.js"
 
 const initialState = {
   actions : [],
@@ -9,35 +9,25 @@ const initialState = {
 export const { state, onStateChange, offStateChange } = createState(initialState)
 
 export async function getUserActions() {
-  const res = await fetch(BACKEND_BASE_URL + user + "/actions")
-  state.actions = await res.json()
+  state.actions = await fetchJSON(user + "/actions")
 }
 
 export async function getUserDepenses() {
-  const res = await fetch(BACKEND_BASE_URL + user + "/depenses")
-  state.depenses = await res.json()
+  state.depenses = await fetchJSON(user + "/depenses")
 }
 
 export async function addDepense(data) {
-  const res = await fetch(BACKEND_BASE_URL + user + "/depenses", {
+  await fetchJSON(user + "/depenses", {
     method : "POST",
     body : data
   })
-  if (!res.ok) {
-    let msg = await res.json()
-    throw new Error(msg.details)
-  }
   return getUserDepenses()
 }
 
 async function remove(type, id) {
-  const res = await fetch(BACKEND_BASE_URL + user + "/" + type + "/" + id, {
+  const res = await fetchJSON(user + "/" + type + "/" + id, {
     method : "DELETE"
   })
-  if (!res.ok) {
-    let msg = await res.json()
-    throw new Error(msg.details)
-  }
   return res;
 }
 
