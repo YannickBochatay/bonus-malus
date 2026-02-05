@@ -27,7 +27,6 @@ class BmUser extends HTMLElement {
   #handleHashChange = () => {
     const hash = location.hash && location.hash !== "#" ? location.hash :"actions"
     
-    scrollTo({ top : 0 })
     this.querySelectorAll("a").forEach(node => {
       if (node.href.includes(hash)) node.classList.remove("outline")
       else node.classList.add("outline")
