@@ -7,8 +7,9 @@ app.teardown_appcontext(close_db)
 
 @app.after_request
 def add_cors_headers(response):
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+  response.headers.add("Access-Control-Allow-Origin", "*")
+  response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+  return response
 
 def check_user(fct):
   def wrapper(user):
@@ -32,7 +33,6 @@ def error_handler(fct):
       return send_error("Requête incorrecte")
   
   return wrapper
-
 
 @app.route("/")
 def joueurs(): 
