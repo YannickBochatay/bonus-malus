@@ -8,7 +8,7 @@
   "display": "standalone",
   "icons": [
         {
-      "src": "./assets/trophy.svg",
+      "src": "/bonus-malus/frontend/assets/trophy.svg",
       "sizes": "any"
     }
   ]
