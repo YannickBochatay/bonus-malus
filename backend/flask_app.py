@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, request, jsonify
 from db import query_db, close_db
 
 app = Flask(__name__)
@@ -7,16 +7,8 @@ app.teardown_appcontext(close_db)
 
 @app.after_request
 def add_cors_headers(response):
-    response.headers.add("Connection", "keep-alive")
     response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Headers", "X-Requested-With")
-    response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
     return response
-
-@app.route("/<path:path>", methods=["OPTIONS"])
-def handle_options(path):
-    return NULL, 204
-
 
 @app.route("/")
 def joueurs(): 
