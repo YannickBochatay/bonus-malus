@@ -191,5 +191,10 @@ def supprime_depense(user, id):
   return jsonify({ "details" : "La dépense a bien été supprimée"})
 
 
+@app.errorhandler(404)
+def resource_not_found(e):
+  return send_error("L'url demandée n'existe pas", 404)
+
+
 if __name__ == '__main__':
   app.run(debug=True)
