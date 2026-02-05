@@ -74,6 +74,7 @@ def nouvelle_action_bareme():
   valeur = request.form["valeur"]
   query_db("insert into bareme (action ,valeur) values (?, ?)", [action, valeur])
   return jsonify({
+    "details" : "La nouvelle action a bien été ajoutée au barème",
     "action" : action,
     "valeur" : valeur
   })
@@ -85,6 +86,7 @@ def maj_action_bareme(id):
   valeur = request.form["valeur"]
   query_db("update bareme set action=?, valeur=? where id=?", [action, valeur, id])
   return jsonify({
+    "details" : "L'action a bien été modifiée",
     "action" : action,
     "valeur" : valeur
   })
@@ -97,7 +99,7 @@ def supprime_action_bareme(id):
   except BaseException:
     return send_error("Cette action a déjà été réalisée, vous ne pouvez pas la supprimer.")
   
-  return jsonify({ "details" : f"action {id} supprimée"})
+  return jsonify({ "details" : "L'action a bien été supprimée" })
 
 @check_user
 @app.route("/<user>")
@@ -150,26 +152,27 @@ def ajout_action(user):
     valeur = res[0]["valeur"]
     query_db("insert into actions (action, joueur, valeur) values (?, ?, ?)", [id_action, user, valeur])
 
-    print("ok")
     return jsonify({
+      "details" : f"L'action a bien été ajoutée à {user}",
       "id" : id_action,
       "user" : user,
       "valeur" : valeur
     })
   else:
-    return jsonify({ "details" : f"{id_action} : action inconnue"}), 404
+    return send_error(f"{id_action} : action inconnue", 404)
 
 @check_user
 @error_handler
 @app.route("/<user>/depenses", methods=['POST'])
 def ajout_depense(user):
   if "cost" not in request.form or 'descript' not in request.form:
-    return jsonify({ "details" : "les champs cost et/ou descript sont manquants"}), 400
+    return send_error("les champs cost et/ou descript sont manquants", 400)
 
   cost = float(request.form["cost"])
   descript = request.form['descript']
   query_db("insert into depenses (cout, joueur, descript) values(?, ?, ?)",[cost, user, descript])
   return jsonify({
+    "details" : f"La dépense a bien été ajoutée à {user}",
     "cost" : cost,
     "user" : user,
     "descript" : descript
@@ -179,13 +182,13 @@ def ajout_depense(user):
 @app.route("/<user>/actions/<id>", methods=['DELETE'])
 def supprime_action(user, id):
   query_db("delete from actions where id=?",[id])
-  return jsonify({ "details" : f"action {id} deleted"})
+  return jsonify({ "details" : "L'action a bien été supprimée" })
 
 @error_handler
 @app.route("/<user>/depenses/<id>", methods=['DELETE'])
 def supprime_depense(user, id):
   query_db("delete from depenses where id=?",[id])
-  return jsonify({ "details" : f"depense {id} deleted"})
+  return jsonify({ "details" : "La dépense a bien été supprimée"})
 
 
 if __name__ == '__main__':
