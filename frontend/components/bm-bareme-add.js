@@ -1,4 +1,5 @@
 import { addBaremeAction } from "../state/main-state.js"
+import { withToast } from "./bm-toast.js"
 
 const template = document.createElement("template")
 
@@ -23,7 +24,7 @@ class BmBaremeAdd extends HTMLElement {
   #handleSubmit = e => {
     e.preventDefault()
     const data = new FormData(this.#form)
-    addBaremeAction(data)
+    withToast(() => addBaremeAction(data))
     this.#form.reset()
   }
 

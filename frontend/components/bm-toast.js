@@ -1,6 +1,7 @@
-const globalStyle = document.createElement("style")
+const template =  document.createElement("template")
 
-globalStyle.innerHTML = `
+template.innerHTML = `
+  <style>
   bm-toast {
     position:fixed;
     display:block;
@@ -14,34 +15,27 @@ globalStyle.innerHTML = `
     text-align: center;
     transform:translateY(5rem);
     transition:transform  0.3s;
-    visibility:hidden;
 
     &.show {
       transform:translateY(0);
       transition:transform  0.3s;
-      visibility:visible;
     }
 
     &[state=success] {
-      background-color:#9DDBC4;
+      color:#04aa04;
+      background-color:#b0fdb0;
     }
 
     &[state=error] {
-      background-color:#fbd5d2;
+      color:#aa0404;
+      background-color:#fdb0b0;
     }
 
     section {
       margin:0;
     }
   }
-`
-
-document.head.append(globalStyle)
-
-
-const template =  document.createElement("template")
-
-template.innerHTML = `
+  </style>
   <section>
     <output role="status">
     </output>
@@ -84,17 +78,20 @@ class BmToast extends HTMLElement {
     this.setAttribute("state", value)
   }
 
-  hide() {
+  hide = () => {
     this.classList.remove("show")
   }
 
-  show() {
+  show = () => {
     if (this.#timeoutId) {
       clearTimeout(this.#timeoutId)
+      this.#timeoutId = null
       this.hide();
     }
+
+    this.hidden = false
     this.classList.add("show")
-    this.#timeoutId = setTimeout(() => this.hide(), this.delay)
+    this.#timeoutId = setTimeout(this.hide, this.delay)
   }
 
   connectedCallback() {

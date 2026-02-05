@@ -1,4 +1,5 @@
 import { removeDepense } from "../state/user-state.js"
+import { withToast } from "./bm-toast.js"
 
 const template = document.createElement("template")
 
@@ -35,7 +36,7 @@ class BmDepense extends HTMLTableRowElement {
     this.children[2].textContent = this.cout
   }
 
-  #handleRemove = () => removeDepense(this.id)
+  #handleRemove = () => withToast(() => removeDepense(this.id))
 
   connectedCallback() {
     this.#update()

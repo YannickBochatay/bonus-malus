@@ -1,4 +1,5 @@
 import { addDepense } from "../state/user-state.js"
+import { withToast } from "./bm-toast.js"
 
 const template = document.createElement("template")
 
@@ -34,7 +35,7 @@ class BmDepenseAdd extends HTMLElement {
   #handleSubmit = e => {
     e.preventDefault();
     const data = new FormData(this.querySelector("form"))
-    addDepense(data);
+    withToast(addDepense(data));
   }
 
   connectedCallback() {

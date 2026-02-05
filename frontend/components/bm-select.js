@@ -44,7 +44,7 @@ class BmSelect extends HTMLSelectElement {
     data.append("joueur", this.user)
     data.append("action", this.value)
 
-    withToast(addUserAction(this.user, data))
+    withToast(() => addUserAction(this.user, data))
     this.value = ""
   }
 

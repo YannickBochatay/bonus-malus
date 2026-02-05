@@ -1,4 +1,5 @@
 import { removeBaremeAction } from "../state/main-state.js"
+import { withToast } from "./bm-toast.js"
 
 const template = document.createElement("template")
 
@@ -30,7 +31,7 @@ class BmBaremeAction extends HTMLTableRowElement {
     this.children[1].textContent = this.valeur
   }
 
-  #handleRemove = () => removeBaremeAction(this.id)
+  #handleRemove = () => withToast(() => removeBaremeAction(this.id))
 
   connectedCallback() {
     this.#update()
