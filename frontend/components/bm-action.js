@@ -36,7 +36,7 @@ class BmAction extends HTMLTableRowElement {
     this.children[2].textContent = this.valeur
   }
 
-  #handleRemove = () => removeAction(this.id)
+  #handleRemove = () => withToast(() => removeAction(this.id))
 
   connectedCallback() {
     this.#update()

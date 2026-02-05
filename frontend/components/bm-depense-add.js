@@ -35,7 +35,7 @@ class BmDepenseAdd extends HTMLElement {
   #handleSubmit = e => {
     e.preventDefault();
     const data = new FormData(this.querySelector("form"))
-    withToast(addDepense(data));
+    withToast(() => addDepense(data));
   }
 
   connectedCallback() {
