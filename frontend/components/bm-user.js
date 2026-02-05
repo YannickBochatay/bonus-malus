@@ -8,7 +8,7 @@ const template = document.createElement("template");
 template.innerHTML = `
   <h2>${user}</h2>
   <div role="group" id="tabs">
-    <a href="#actions" role="button" class="secondary outline">Actions</a>
+    <a href="#actions" role="button" class="secondary">Actions</a>
     <a href="#depenses" role="button" class="secondary outline">Dépenses</a>
   </div>
   <bm-router>
@@ -25,9 +25,11 @@ class BmUser extends HTMLElement {
   }
 
   #handleHashChange = () => {
+    const hash = location.hash && location.hash !== "#" ? location.hash :"actions"
+    
     scrollTo({ top : 0 })
     this.querySelectorAll("a").forEach(node => {
-      if (node.href.includes(location.hash)) node.classList.remove("outline")
+      if (node.href.includes(hash)) node.classList.remove("outline")
       else node.classList.add("outline")
     })
   }
