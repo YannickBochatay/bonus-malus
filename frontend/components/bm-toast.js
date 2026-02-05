@@ -6,13 +6,13 @@ template.innerHTML = `
     position:fixed;
     display:block;
     width:50ch;
+    max-width:100%;
     bottom:5px;
     left:calc(50% - 25ch);
     border:none;
     padding:var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
     border-radius:var(--pico-border-radius);
     font-size: 1rem;
-    text-align: center;
     transform:translateY(5rem);
     transition:transform  0.3s;
 
