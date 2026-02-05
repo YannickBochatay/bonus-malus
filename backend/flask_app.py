@@ -52,10 +52,10 @@ def joueurs():
 
   res = []
 
-  for index, bonus in enumerate(bonus):
+  for index, bonusIndex in enumerate(bonus):
     res.append({
-      "joueur" : bonus["joueur"],
-      "bonus" : bonus["score"],
+      "joueur" : bonusIndex["joueur"],
+      "bonus" : bonusIndex["score"],
       "malus" : malus[index]["score"],
       "depenses" : depenses[index]["total"]
     })
