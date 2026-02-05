@@ -4,7 +4,7 @@ const template = document.createElement("template")
 
 template.innerHTML = `
   <h4>Ajouter une dépense</h4>
-  <form id="form_expense">
+  <form>
     <input
       type="text"
       name="descript"

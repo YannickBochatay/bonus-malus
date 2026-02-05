@@ -20,9 +20,11 @@ class BmBaremeAdd extends HTMLElement {
     this.#form = this.querySelector("form")
   }
 
-  #handleSubmit = () => {
+  #handleSubmit = e => {
+    e.preventDefault()
     const data = new FormData(this.#form)
     addBaremeAction(data)
+    this.#form.reset()
   }
 
   connectedCallback() {

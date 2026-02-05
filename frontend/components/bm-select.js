@@ -27,7 +27,7 @@ class BmSelect extends HTMLSelectElement {
       if (!option.parentNode) this.append(option)
     }
 
-    while (this.children.length > actions.length) this.lastElementChild.remove()
+    while (this.children.length > actions.length + 1) this.lastElementChild.remove()
   }
 
   get user() {
@@ -45,6 +45,7 @@ class BmSelect extends HTMLSelectElement {
 
     try {
       await addUserAction(this.user, data)
+      this.value = ""
     } catch (e) {
       console.error(e)
     }
