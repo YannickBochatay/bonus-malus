@@ -22,12 +22,12 @@ template.innerHTML = `
     }
 
     &[state=success] {
-      color:#04aa04;
+      color:#083e08;
       background-color:#b0fdb0;
     }
 
     &[state=error] {
-      color:#aa0404;
+      color:#6e0303;
       background-color:#fdb0b0;
     }
 
@@ -46,7 +46,7 @@ class BmToast extends HTMLElement {
 
   static observedAttributes = ["label"]
 
-  #delay = 5
+  #delay = 3
   #timeoutId
 
   constructor() {
@@ -79,17 +79,17 @@ class BmToast extends HTMLElement {
   }
 
   hide = () => {
+    clearTimeout(this.#timeoutId)
+    this.#timeoutId = null
     this.classList.remove("show")
   }
 
   show = () => {
-    if (this.#timeoutId) {
-      clearTimeout(this.#timeoutId)
-      this.#timeoutId = null
-      this.hide();
+    if (this.classList.contains("show")) {
+      this.hide()
+      return setTimeout(this.show, 300)
     }
 
-    this.hidden = false
     this.classList.add("show")
     this.#timeoutId = setTimeout(this.hide, this.delay)
   }
