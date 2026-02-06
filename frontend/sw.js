@@ -41,12 +41,14 @@ const APP_STATIC_RESOURCES = [
 
 // Lors de l'installation, on met en cache les ressources statiques
 self.addEventListener("install", (event) => {
+
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
       cache.addAll(APP_STATIC_RESOURCES);
-    })(),
+    })()
   );
+  skipWaiting();
 });
 
 // Lors de l'activation, on supprime les anciens caches
