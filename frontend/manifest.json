@@ -1,6 +1,6 @@
 {
   "name": "Bonus-malus : gestion des bonnes et mauvaises actions",
-  "short_name": "B-M",
+  "short_name": "Bonus/Malus",
   "description": "Définissez un barême et récompensez vos enfants",
   "start_url": "/bonus-malus/frontend/",
   "theme_color": "#ffffff",
