@@ -1,5 +1,5 @@
 // La version du cache
-const VERSION = "v1.5";
+const VERSION = "v1.6";
 
 // Le nom du cache
 const CACHE_NAME = `bonus-malus-${VERSION}`;
