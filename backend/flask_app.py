@@ -6,6 +6,8 @@ app = Flask(__name__)
 
 app.teardown_appcontext(close_db)
 
+page_length = 20
+
 @app.after_request
 def add_cors_headers(response):
   response.headers.add("Access-Control-Allow-Origin", "*")
@@ -125,32 +127,36 @@ def resume_joueur(user):
     "depenses" : depenses[0]["total"]
   })
 
-
-page_length = 20
-
 @app.route("/<user>/actions/", methods=["GET"])
 @check_user
 def actions_joueur(user):
   page = int(request.args.get("p", 1))
-  actions = query_db("select actions.id, bareme.action, date, actions.valeur "\
-    "from actions, bareme where bareme.id = actions.action and joueur=? "\
-    "order by date desc limit ? offset ?",
+  base_sql = "from actions, bareme where bareme.id = actions.action and joueur=? "
+
+  count = query_db("select count(actions.id) as total " + base_sql, [user])
+
+  actions = query_db("select actions.id, bareme.action, date, actions.valeur "
+    + base_sql + "order by date desc limit ? offset ?",
     [user, page_length, (page - 1) * page_length]
   )
 
-  return jsonify(actions)
+  return jsonify({ "count" : count[0]["total"], "list" : actions })
 
 @app.route("/<user>/depenses/", methods=["GET"])
 @error_handler
 @check_user
 def depenses_joueur(user):
   page = int(request.args.get("p", 1))
+  base_sql = "from depenses where joueur=? order by date "
+
+  count = query_db("select count(depenses.id) as total " + base_sql, [user])
+
   depenses = query_db(
-    "select * from depenses where joueur=? order by date desc limit ? offset ?",
+    "select * " + base_sql + "desc limit ? offset ?",
     [user, page_length, (page - 1) * page_length ]
   )
 
-  return jsonify(depenses)
+  return jsonify({ "count" : count[0]["total"], "list" : depenses })
 
 @app.route("/<user>/actions/", methods=['POST'])
 @error_handler

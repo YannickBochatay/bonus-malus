@@ -1,3 +1,4 @@
+import { PAGE_LENGTH } from "../state/utils.js"
 import { removeDepense } from "../state/user-state.js"
 import { withToast } from "./bm-toast.js"
 
@@ -36,7 +37,10 @@ class BmDepense extends HTMLTableRowElement {
     this.children[2].textContent = this.cout
   }
 
-  #handleRemove = () => withToast(() => removeDepense(this.id))
+  #handleRemove = () => {
+    const currentPage = Math.floor(this.sectionRowIndex / PAGE_LENGTH) + 1
+    withToast(() => removeDepense(this.id, currentPage))
+  }
 
   connectedCallback() {
     this.#update()

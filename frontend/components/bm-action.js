@@ -1,4 +1,5 @@
 import { removeAction } from "../state/user-state.js"
+import { PAGE_LENGTH } from "../state/utils.js"
 import { withToast } from "./bm-toast.js"
 
 const template = document.createElement("template")
@@ -36,7 +37,10 @@ class BmAction extends HTMLTableRowElement {
     this.children[2].textContent = this.valeur
   }
 
-  #handleRemove = () => withToast(() => removeAction(this.id))
+  #handleRemove = () => {
+    const currentPage = Math.floor(this.sectionRowIndex / PAGE_LENGTH) + 1
+    withToast(() => removeAction(this.id, currentPage))
+  }
 
   connectedCallback() {
     this.#update()

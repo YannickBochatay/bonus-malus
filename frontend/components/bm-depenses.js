@@ -1,5 +1,6 @@
 import "./bm-depense.js"
 import "./bm-depense-add.js"
+import { PAGE_LENGTH } from "../state/utils.js"
 import { state, onStateChange, offStateChange, getUserDepenses } from "../state/user-state.js"
 
 getUserDepenses()
@@ -24,6 +25,8 @@ template.innerHTML = `
 
 class BmDepenses extends HTMLElement {
 
+  #pendingRequest
+
   constructor() {
     super()
     this.append(template.content.cloneNode(true))
@@ -36,10 +39,12 @@ class BmDepenses extends HTMLElement {
 
       const tr = tbody.children[index] ?? document.createElement("tr", { is : "bm-depense" })
 
-      tr.id = depense.id
-      tr.descript = depense.descript
-      tr.date = depense.date
-      tr.cout = depense.cout
+      if (depense) {
+        tr.id = depense.id
+        tr.descript = depense.descript
+        tr.date = depense.date
+        tr.cout = depense.cout
+      }
 
       if (!tr.parentNode) tbody.appendChild(tr)
     }
@@ -47,13 +52,32 @@ class BmDepenses extends HTMLElement {
     while (tbody.children.length > state.depenses.length) tbody.lastElementChild.remove()
   }
 
+  #handleScroll = async() => {
+    if (this.#pendingRequest) return this.#pendingRequest.then(this.#handleScroll)
+
+    const firstEmptyRow = this.querySelector("tbody tr:not([id])")
+
+    if (firstEmptyRow) {
+      const offset = window.innerHeight - firstEmptyRow.getBoundingClientRect().top
+
+      if (offset > -200 && !this.#pendingRequest) {
+        const nextPage = Math.floor(firstEmptyRow.sectionRowIndex / PAGE_LENGTH) + 1
+        this.#pendingRequest = getUserDepenses(nextPage)
+        await this.#pendingRequest
+        this.#pendingRequest = null
+      }
+    }
+  }
+
   connectedCallback() {
     this.#update()
     onStateChange("depenses", this.#update)
+    window.addEventListener("scroll", this.#handleScroll)
   }
 
   disconnectedCallback() {
     offStateChange("depenses", this.#update)
+    window.removeEventListener("scroll", this.#handleScroll)
   }
 }
 
