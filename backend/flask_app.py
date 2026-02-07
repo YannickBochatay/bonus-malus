@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from functools import wraps
 from db import query_db, close_db
 
 app = Flask(__name__)
@@ -12,13 +13,14 @@ def add_cors_headers(response):
   return response
 
 def check_user(fct):
+  @wraps(fct)
   def wrapper(user):
     check_user = query_db("select nom from joueurs where nom=?", [user])
     
     if not check_user:
       return send_error("joueur inconnu", 404)
     
-    return fct()
+    return fct(user)
   
   return wrapper
 
@@ -26,6 +28,7 @@ def send_error(msg, code = 400):
   return jsonify({ "details" : msg}), code
 
 def error_handler(fct):
+  @wraps(fct)
   def wrapper(*args, **kwargs):
     try:
       return fct(*args, **kwargs)
@@ -62,13 +65,13 @@ def joueurs():
 
   return jsonify(res)
 
-@app.route("/bareme", methods=['GET'])
+@app.route("/bareme/", methods=['GET'])
 def affiche_bareme():
   actions = query_db("select * from bareme order by action, valeur")
   return jsonify(actions)
 
+@app.route("/bareme/", methods=['POST'])
 @error_handler
-@app.route("/bareme", methods=['POST'])
 def nouvelle_action_bareme():
   action = request.form["action"]
   valeur = request.form["valeur"]
@@ -79,8 +82,8 @@ def nouvelle_action_bareme():
     "valeur" : valeur
   })
 
-@error_handler
 @app.route("/bareme/<id>", methods=['PUT'])
+@error_handler
 def maj_action_bareme(id):
   action = request.form["action"]
   valeur = request.form["valeur"]
@@ -91,8 +94,8 @@ def maj_action_bareme(id):
     "valeur" : valeur
   })
 
-@error_handler
 @app.route("/bareme/<id>", methods=['DELETE'])
+@error_handler
 def supprime_action_bareme(id):
   try:
     query_db("delete from bareme where id=?",[id])
@@ -101,8 +104,8 @@ def supprime_action_bareme(id):
   
   return jsonify({ "details" : "L'action a bien été supprimée" })
 
+@app.route("/<user>/")
 @check_user
-@app.route("/<user>")
 def resume_joueur(user): 
   bonus = query_db("select sum(valeur) as score "\
                    "from joueurs left join actions on joueurs.nom=actions.joueur "\
@@ -122,27 +125,36 @@ def resume_joueur(user):
     "depenses" : depenses[0]["total"]
   })
 
-@check_user
-@app.route("/<user>/actions", methods=["GET"])
-def actions_joueur(user):
 
+page_length = 20
+
+@app.route("/<user>/actions/", methods=["GET"])
+@check_user
+def actions_joueur(user):
+  page = int(request.args.get("p", 1))
   actions = query_db("select actions.id, bareme.action, date, actions.valeur "\
-    "from actions, bareme where bareme.id = actions.action and joueur=? order by date desc",
-    [user]
+    "from actions, bareme where bareme.id = actions.action and joueur=? "\
+    "order by date desc limit ? offset ?",
+    [user, page_length, (page - 1) * page_length]
   )
 
   return jsonify(actions)
 
+@app.route("/<user>/depenses/", methods=["GET"])
+@error_handler
 @check_user
-@app.route("/<user>/depenses", methods=["GET"])
 def depenses_joueur(user):
-  depenses = query_db("select * from depenses where joueur=? order by date desc", [user])
+  page = int(request.args.get("p", 1))
+  depenses = query_db(
+    "select * from depenses where joueur=? order by date desc limit ? offset ?",
+    [user, page_length, (page - 1) * page_length ]
+  )
 
   return jsonify(depenses)
 
-@check_user
+@app.route("/<user>/actions/", methods=['POST'])
 @error_handler
-@app.route("/<user>/actions", methods=['POST'])
+@check_user
 def ajout_action(user):
   id_action = int(request.form["action"])
 
@@ -161,9 +173,9 @@ def ajout_action(user):
   else:
     return send_error(f"{id_action} : action inconnue", 404)
 
-@check_user
+@app.route("/<user>/depenses/", methods=['POST'])
 @error_handler
-@app.route("/<user>/depenses", methods=['POST'])
+@check_user
 def ajout_depense(user):
   if "cost" not in request.form or 'descript' not in request.form:
     return send_error("les champs cost et/ou descript sont manquants", 400)
@@ -178,14 +190,14 @@ def ajout_depense(user):
     "descript" : descript
   })
 
-@error_handler
 @app.route("/<user>/actions/<id>", methods=['DELETE'])
+@error_handler
 def supprime_action(user, id):
   query_db("delete from actions where id=?",[id])
   return jsonify({ "details" : "L'action a bien été supprimée" })
 
-@error_handler
 @app.route("/<user>/depenses/<id>", methods=['DELETE'])
+@error_handler
 def supprime_depense(user, id):
   query_db("delete from depenses where id=?",[id])
   return jsonify({ "details" : "La dépense a bien été supprimée"})
