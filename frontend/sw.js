@@ -81,7 +81,7 @@ self.addEventListener("fetch", (event) => {
     return
   }
 
-  if (/yanb\.pythonanywhere\.com/.test(event.request.url)) {
+  if (/(yanb\.pythonanywhere\.com|127\.0\.0\.1:5000)/.test(event.request.url)) {
     event.respondWith(
       (async () => {
         try {
