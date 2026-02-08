@@ -43,17 +43,17 @@ def error_handler(fct):
 def joueurs(): 
   bonus = query_db("select joueurs.nom as joueur, sum(valeur) as score "\
                    "from joueurs left join actions on joueurs.nom=actions.joueur "\
-                   "where valeur > 0 "\
-                   "group by joueurs.nom")
+                   "and valeur > 0 "\
+                   "group by joueurs.nom order by joueurs.nom")
   
   malus = query_db("select joueurs.nom as joueur, sum(valeur) as score "\
                    "from joueurs left join actions on joueurs.nom=actions.joueur "\
-                   "where valeur < 0 "\
-                  "group by joueurs.nom")
+                   "and valeur < 0 "\
+                  "group by joueurs.nom order by joueurs.nom")
 
   depenses = query_db("select joueurs.nom as joueur, ifnull(cast(floor(sum(cout)*10) as int),0) as total "\
                     "from joueurs left join depenses on joueurs.nom=depenses.joueur "\
-                    "group by joueurs.nom")
+                    "group by joueurs.nom order by joueurs.nom")
 
   res = []
 
@@ -106,7 +106,7 @@ def supprime_action_bareme(id):
   
   return jsonify({ "details" : "L'action a bien été supprimée" })
 
-@app.route("/<user>")
+@app.route("/<user>", methods=["GET"])
 @check_user
 def resume_joueur(user): 
   bonus = query_db("select sum(valeur) as score "\
@@ -126,6 +126,31 @@ def resume_joueur(user):
     "malus" : malus[0]["score"],
     "depenses" : depenses[0]["total"]
   })
+
+@app.route("/<user>", methods=["PUT"])
+@error_handler
+def modif_joueur(user):
+  nouveau_nom = request.form["name"]
+  query_db("update joueurs set nom=? where nom=?",[nouveau_nom, user])
+  return jsonify({ "details" : f"{user} a bien été modifié en {nouveau_nom}" })
+
+@app.route("/<user>", methods=["DELETE"])
+@error_handler
+def supprime_joueur(user):
+  try:
+    query_db("delete from joueurs where nom=?",[ user])
+  except BaseException:
+    return send_error("Ce joueur ou joueuse a déjà réalisé des actions, vous ne pouvez pas le supprimer.")
+    
+  return jsonify({ "details" : f"{user} a bien été supprimé" })
+
+
+@app.route("/users", methods=["POST"])
+@error_handler
+def ajout_joueur():
+  joueur = request.form["user"]
+  query_db("insert into joueurs values (?)",[joueur])
+  return jsonify({ "details" : f"{joueur} a bien été ajouté·e" })
 
 @app.route("/<user>/actions", methods=["GET"])
 @check_user
