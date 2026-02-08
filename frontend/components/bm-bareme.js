@@ -8,9 +8,6 @@ const template = document.createElement("template")
 
 template.innerHTML = `
   <table>
-    <caption>
-      Barème
-    </caption>
     <thead>
       <tr>
         <th scope="col">Action</th>

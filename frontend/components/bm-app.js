@@ -9,9 +9,9 @@ class BmApp extends HTMLElement {
     this.innerHTML = state.users.map(user => `
       <bm-table
         user=${user.joueur} 
-        bonus=${user.bonus} 
-        malus=${user.malus} 
-        depenses=${user.depenses}
+        bonus=${user.bonus ?? 0} 
+        malus=${user.malus ?? 0} 
+        depenses=${user.depenses ?? 0}
       ></bm-table>
     `).join("")
   }

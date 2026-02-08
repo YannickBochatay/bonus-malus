@@ -11,6 +11,31 @@ export async function getUsersSummary() {
   state.users = await fetchJSON()
 }
 
+export async function updateUser(user, data) {
+  const msg = await fetchJSON(user, {
+    method : "PUT",
+    body : data
+  })
+  await getUsersSummary()
+  return msg
+}
+
+
+export async function addUser(data) {
+  const msg = await fetchJSON("users", {
+    method : "POST",
+    body : data
+  })
+  await getUsersSummary()
+  return msg
+}
+
+export async function removeUser(user) {
+  const msg = await fetchJSON(user, { method : "DELETE" })
+  await getUsersSummary()
+  return msg
+}
+
 export async function addUserAction(user, data) {
   const msg = await fetchJSON(user + "/actions", {
     method : "POST",

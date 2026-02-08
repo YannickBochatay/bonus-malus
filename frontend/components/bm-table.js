@@ -75,13 +75,13 @@ class BmTable extends HTMLElement {
     return this.getAttribute("depenses")
   }
 
-  async #update() { 
+  async #update() {
     this.querySelector(".user").textContent = this.user
-    this.querySelector(".total").textContent = Number(this.bonus) + Number(this.malus)
+    this.querySelector(".total").textContent = (Number(this.bonus) + Number(this.malus))
     this.querySelector(".bonus").textContent = this.bonus
     this.querySelector(".malus").textContent = this.malus
     this.querySelector(".depenses").textContent = this.depenses
-    this.querySelector(".reste").textContent = Number(this.bonus) + Number(this.malus) - this.depenses
+    this.querySelector(".reste").textContent = (Number(this.bonus) + Number(this.malus) - this.depenses)
   }
 
   #setUser() {
