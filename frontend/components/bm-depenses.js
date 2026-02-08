@@ -3,8 +3,6 @@ import "./bm-depense-add.js"
 import { PAGE_LENGTH } from "../state/utils.js"
 import { state, onStateChange, offStateChange, getUserDepenses } from "../state/user-state.js"
 
-getUserDepenses()
-
 const template = document.createElement("template")
 
 template.innerHTML = `
@@ -39,45 +37,45 @@ class BmDepenses extends HTMLElement {
 
       const tr = tbody.children[index] ?? document.createElement("tr", { is : "bm-depense" })
 
-      if (depense) {
-        tr.id = depense.id
-        tr.descript = depense.descript
-        tr.date = depense.date
-        tr.cout = depense.cout
-      }
+      if (depense?.id) tr.id = depense.id
+      else tr.removeAttribute("id")
+
+      tr.descript = depense?.descript ?? ""
+      tr.date = depense?.date ?? ""
+      tr.cout = depense?.cout ?? ""
 
       if (!tr.parentNode) tbody.appendChild(tr)
     }
 
     while (tbody.children.length > state.depenses.length) tbody.lastElementChild.remove()
+
+    this.#loadNearestItems()
   }
 
-  #handleScroll = async() => {
-    if (this.#pendingRequest) return this.#pendingRequest.then(this.#handleScroll)
+  #loadNearestItems = () => {
+    if (this.#pendingRequest) return this.#pendingRequest.then(this.#loadNearestItems)
 
     const firstEmptyRow = this.querySelector("tbody tr:not([id])")
 
-    if (firstEmptyRow) {
-      const offset = window.innerHeight - firstEmptyRow.getBoundingClientRect().top
+    if (!firstEmptyRow) return
 
-      if (offset > -200 && !this.#pendingRequest) {
-        const nextPage = Math.floor(firstEmptyRow.sectionRowIndex / PAGE_LENGTH) + 1
-        this.#pendingRequest = getUserDepenses(nextPage)
-        await this.#pendingRequest
-        this.#pendingRequest = null
-      }
+    const top = firstEmptyRow.getBoundingClientRect().top
+
+    if (top && top < innerHeight + 200) {
+      const nextPage = Math.floor(firstEmptyRow.sectionRowIndex / PAGE_LENGTH) + 1
+      this.#pendingRequest = getUserDepenses(nextPage).then(() => this.#pendingRequest = null)      
     }
   }
 
-  connectedCallback() {
-    this.#update()
+  async connectedCallback() {
     onStateChange("depenses", this.#update)
-    window.addEventListener("scroll", this.#handleScroll)
+    window.addEventListener("scroll", this.#loadNearestItems)
+    getUserDepenses()
   }
 
   disconnectedCallback() {
     offStateChange("depenses", this.#update)
-    window.removeEventListener("scroll", this.#handleScroll)
+    window.removeEventListener("scroll", this.#loadNearestItems)
   }
 }
 

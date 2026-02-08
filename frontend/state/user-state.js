@@ -10,23 +10,19 @@ export const { state, onStateChange, offStateChange } = createState(initialState
 export async function getUserActions(page = 1) {
   const { count, list } = await fetchJSON(`${user}/actions?p=${page}`)
 
-  if (state.actions.length === 0) state.actions = new Array(count)
+  const actions = (state.actions.length === count) ? state.actions : new Array(count)
 
   const index = (page - 1) * PAGE_LENGTH
-  const actions = state.actions.toSpliced(index, PAGE_LENGTH, ...list)
-  if (actions.length > count) actions.splice(count, count - actions.length)
-  if (count > actions.length) actions.concat(new Array(count - actions.length))
-
-  state.actions = actions
+  state.actions = actions.toSpliced(index, PAGE_LENGTH, ...list)
 }
 
 export async function getUserDepenses(page = 1) {
   const { count, list } = await fetchJSON(`${user}/depenses?p=${page}`)
 
-  if (state.depenses.length === 0) state.depenses = new Array(count)
+  const depenses = (state.depenses.length === count) ? state.depenses : new Array(count)
 
   const index = (page - 1) * PAGE_LENGTH
-  state.depenses = state.depenses.toSpliced(index, PAGE_LENGTH, ...list)
+  state.depenses = depenses.toSpliced(index, PAGE_LENGTH, ...list)
 }
 
 export async function addDepense(data) {
@@ -44,14 +40,14 @@ async function remove(type, id) {
   })
 }
 
-export async function removeAction(id, page = 1) {
+export async function removeAction(id) {
   const msg = await remove("actions", id)
-  await getUserActions(page)
+  await getUserActions()
   return msg
 }
 
-export async function removeDepense(id, page = 1) {
+export async function removeDepense(id) {
   const msg = await remove("depenses", id)
-  await getUserDepenses(page)
+  await getUserDepenses()
   return msg
 }
