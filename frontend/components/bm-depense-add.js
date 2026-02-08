@@ -11,6 +11,7 @@ template.innerHTML = `
       name="descript"
       placeholder="Objet de la dépense"
       aria-label="Objet de la dépense"
+      required
     >
     <fieldset role="group">
       <input
@@ -20,6 +21,7 @@ template.innerHTML = `
         min="0"
         step="0.01"
         aria-label="coût en euros"
+        required
       >
       <input type="submit" value="Valider">
     </fieldset>
@@ -27,19 +29,25 @@ template.innerHTML = `
 `
 
 class BmDepenseAdd extends HTMLElement {
+
+  #form
+
   constructor() {
     super()
     this.append(template.content.cloneNode(true))
+    this.#form = this.querySelector("form")
   }
 
   #handleSubmit = e => {
     e.preventDefault();
-    const data = new FormData(this.querySelector("form"))
-    withToast(() => addDepense(data));
+    const data = new FormData(this.#form)
+    withToast(() => addDepense(data))
+    this.#form.reset()
+    this.querySelector("input[name=descript]").focus()
   }
 
   connectedCallback() {
-    this.querySelector("form").addEventListener("submit", this.#handleSubmit)
+    this.#form.addEventListener("submit", this.#handleSubmit)
   }
 }
 
