@@ -57,22 +57,22 @@ def joueurs():
 
   res = []
 
-  for index, bonusIndex in enumerate(bonus):
+  for index, bonus_index in enumerate(bonus):
     res.append({
-      "joueur" : bonusIndex["joueur"],
-      "bonus" : bonusIndex["score"],
+      "joueur" : bonus_index["joueur"],
+      "bonus" : bonus_index["score"],
       "malus" : malus[index]["score"],
       "depenses" : depenses[index]["total"]
     })
 
   return jsonify(res)
 
-@app.route("/bareme/", methods=['GET'])
+@app.route("/bareme", methods=['GET'])
 def affiche_bareme():
   actions = query_db("select * from bareme order by action, valeur")
   return jsonify(actions)
 
-@app.route("/bareme/", methods=['POST'])
+@app.route("/bareme", methods=['POST'])
 @error_handler
 def nouvelle_action_bareme():
   action = request.form["action"]
@@ -106,7 +106,7 @@ def supprime_action_bareme(id):
   
   return jsonify({ "details" : "L'action a bien été supprimée" })
 
-@app.route("/<user>/")
+@app.route("/<user>")
 @check_user
 def resume_joueur(user): 
   bonus = query_db("select sum(valeur) as score "\
@@ -127,7 +127,7 @@ def resume_joueur(user):
     "depenses" : depenses[0]["total"]
   })
 
-@app.route("/<user>/actions/", methods=["GET"])
+@app.route("/<user>/actions", methods=["GET"])
 @check_user
 def actions_joueur(user):
   page = int(request.args.get("p", 1))
@@ -142,7 +142,7 @@ def actions_joueur(user):
 
   return jsonify({ "count" : count[0]["total"], "list" : actions })
 
-@app.route("/<user>/depenses/", methods=["GET"])
+@app.route("/<user>/depenses", methods=["GET"])
 @error_handler
 @check_user
 def depenses_joueur(user):
@@ -158,7 +158,7 @@ def depenses_joueur(user):
 
   return jsonify({ "count" : count[0]["total"], "list" : depenses })
 
-@app.route("/<user>/actions/", methods=['POST'])
+@app.route("/<user>/actions", methods=['POST'])
 @error_handler
 @check_user
 def ajout_action(user):
@@ -179,7 +179,7 @@ def ajout_action(user):
   else:
     return send_error(f"{id_action} : action inconnue", 404)
 
-@app.route("/<user>/depenses/", methods=['POST'])
+@app.route("/<user>/depenses", methods=['POST'])
 @error_handler
 @check_user
 def ajout_depense(user):
