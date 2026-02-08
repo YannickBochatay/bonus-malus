@@ -1,4 +1,4 @@
-import { user, createState, fetchJSON } from "./utils.js"
+import { user, createState, fetchJSON, PAGE_LENGTH } from "./utils.js"
 
 const initialState = {
   actions : [],
@@ -7,12 +7,22 @@ const initialState = {
 
 export const { state, onStateChange, offStateChange } = createState(initialState)
 
-export async function getUserActions() {
-  state.actions = await fetchJSON(user + "/actions")
+export async function getUserActions(page = 1) {
+  const { count, list } = await fetchJSON(`${user}/actions?p=${page}`)
+
+  const actions = (state.actions.length === count) ? state.actions : new Array(count)
+
+  const index = (page - 1) * PAGE_LENGTH
+  state.actions = actions.toSpliced(index, PAGE_LENGTH, ...list)
 }
 
-export async function getUserDepenses() {
-  state.depenses = await fetchJSON(user + "/depenses")
+export async function getUserDepenses(page = 1) {
+  const { count, list } = await fetchJSON(`${user}/depenses?p=${page}`)
+
+  const depenses = (state.depenses.length === count) ? state.depenses : new Array(count)
+
+  const index = (page - 1) * PAGE_LENGTH
+  state.depenses = depenses.toSpliced(index, PAGE_LENGTH, ...list)
 }
 
 export async function addDepense(data) {

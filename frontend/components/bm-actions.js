@@ -1,7 +1,6 @@
 import "./bm-action.js"
+import { PAGE_LENGTH } from "../state/utils.js"
 import { state, onStateChange, offStateChange, getUserActions } from "../state/user-state.js";
-
-getUserActions()
 
 const template = document.createElement("template")
 
@@ -21,6 +20,9 @@ template.innerHTML = `
 `
 
 class BmActions extends HTMLElement {
+
+  #pendingRequest
+
   constructor() {
     super()
     this.append(template.content.cloneNode(true))
@@ -32,24 +34,45 @@ class BmActions extends HTMLElement {
     for (const [index, action] of state.actions.entries()) {
       const tr = tbody.children[index] ?? document.createElement("tr", { is : "bm-action" })
 
-      tr.id = action.id
-      tr.action = action.action
-      tr.date = action.date
-      tr.valeur = action.valeur
+      if (action?.id) tr.id = action.id
+      else tr.removeAttribute("id")
+
+      tr.action = action?.action ?? ""
+      tr.date = action?.date ?? ""
+      tr.valeur = action?.valeur ?? ""
 
       if (!tr.parentNode) tbody.appendChild(tr)
     }
 
     while (tbody.children.length > state.actions.length) tbody.lastElementChild.remove()
+
+    this.#loadNearestItems()
+  }
+
+  #loadNearestItems = () => {
+    if (this.#pendingRequest) return this.#pendingRequest.then(this.#loadNearestItems)
+
+    const firstEmptyRow = this.querySelector('tbody tr:not([id])')
+
+    if (!firstEmptyRow) return
+
+    const top = firstEmptyRow.getBoundingClientRect().top
+
+    if (top && top < innerHeight + 200) {
+      const nextPage = Math.floor(firstEmptyRow.sectionRowIndex / PAGE_LENGTH) + 1
+      this.#pendingRequest = getUserActions(nextPage).then(() => this.#pendingRequest = null)
+    }
   }
 
   connectedCallback() {
-    this.#update()
     onStateChange("actions", this.#update)
+    window.addEventListener("scroll", this.#loadNearestItems)
+    getUserActions()
   }
 
   disconnectedCallback() {
     offStateChange("actions", this.#update)
+    window.removeEventListener("scroll", this.#loadNearestItems)
   }
 }
 

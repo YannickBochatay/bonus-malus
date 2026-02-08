@@ -36,7 +36,9 @@ class BmDepense extends HTMLTableRowElement {
     this.children[2].textContent = this.cout
   }
 
-  #handleRemove = () => withToast(() => removeDepense(this.id))
+  #handleRemove = () => {
+    withToast(() => removeDepense(this.id))
+  }
 
   connectedCallback() {
     this.#update()
