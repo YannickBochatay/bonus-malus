@@ -3,6 +3,26 @@ import { withToast } from "./bm-toast.js";
 
 getBaremeActions()
 
+const style = document.createElement("style")
+
+style.innerHTML = /*css*/`
+  select[is=bm-select], select[is=bm-select]:invalid {
+    color:white;
+    text-align:center;
+    padding-left:45px;
+    margin-bottom:0;
+
+    &.bonus {
+      background-color:#04AA6D;
+    }
+    &.malus {
+      background-color:#f44336;
+    }
+  }
+`
+
+document.head.append(style)
+
 const template = document.createElement('template')
 
 template.innerHTML = `

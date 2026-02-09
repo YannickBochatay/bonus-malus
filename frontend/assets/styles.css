@@ -1,11 +1,6 @@
 html {
   scroll-behavior: smooth;
 }
-h1 {
-  display:inline;
-  font-size:var(--pico-font-size);
-  color:inherit;
-}
 h2 {
   text-align: center;
 }
@@ -18,121 +13,7 @@ header.container, main.container {
 main.container {
   margin-top:0;
 }
-#logo {
-  display:flex;
-  align-items: center;
-  padding:0;
-}
-#logo a {
-  margin:0;
-}
-#logo img {
-  height:120px;
-  margin-right:20px;
-}
-nav details {
-
-  position:absolute;
-  top:1.5rem;
-  right:1.5rem;
-  display:flex;
-  flex-direction:column;
-  align-items: end;
-  z-index:1;
-
-  ul {
-    display:block;
-	  border: var(--pico-border-width) solid var(--pico-table-border-color);
-	  background-color: var(--pico-background-color);
-    border-radius:var(--pico-border-radius);
-
-    li {
-      display:block;
-      margin:0;
-      padding:0;
-      a {
-        display:block;
-        margin:0;
-        padding:var(--pico-spacing) calc(var(--pico-spacing) * 2);
-      }
-      a:hover {
-        background-color:var(--pico-dropdown-hover-background-color);
-        text-decoration:none;
-      }
-    }
-  }
-
-  summary {
-    font-size:2rem;
-    transform:rotate(0deg);
-    transition:transform 0.5s;
-    &::after {
-      content:none;
-    }
-  }
-
-  &[open] summary {
-    transform:rotate(360deg);
-    transition:transform 0.5s;
-  }
-}
-caption {
-  font-size:1.5rem;
-  font-weight:bold;
-}
-.bonus-malus {
-  margin-bottom:0;
-
-  td, th {
-    text-align: center;
-    box-sizing: border-box;
-    width:50%;
-  }
-}
-.bilan {
-  width:250px;
-  margin-left:auto;
-  margin-right:auto;
-}
-select[is=bm-select], select[is=bm-select]:invalid {
-  color:white;
-  text-align:center;
-  padding-left:45px;
-  margin-bottom:0;
-
-  &.bonus {
-    background-color:#04AA6D;
-  }
-  &.malus {
-    background-color:#f44336;
-  }
-}
 input.icon-button, button.icon-button {
   width:59px;
   margin:0;
-}
-
-#form_new form {
-  display:flex;
-  align-items: center;
-  flex-wrap:wrap;
-
-  input {
-    margin:0;
-    &:nth-child(1) {
-      flex:2;
-      min-width:20ch;
-    }
-    &:nth-child(2) {
-      flex:1;
-      min-width:10ch;
-    }
-  }
-
-  input[type=submit] {
-    margin: calc(var(--pico-spacing)/ 2) var(--pico-spacing);
-  }
-}
-bm-bareme tbody td:last-child {
-  text-align: right;
 }

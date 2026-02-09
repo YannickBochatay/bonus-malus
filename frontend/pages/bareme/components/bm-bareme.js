@@ -4,6 +4,35 @@ import { state, getBaremeActions, onStateChange, offStateChange } from "../state
 
 getBaremeActions()
 
+const style = document.createElement("style")
+
+style.innerHTML = /*css*/`
+  #new-bareme-action form {
+    display:flex;
+    align-items: center;
+    flex-wrap:wrap;
+
+    input {
+      margin:0;
+      &:nth-child(1) {
+        flex:2;
+        min-width:20ch;
+      }
+      &:nth-child(2) {
+        flex:1;
+        min-width:10ch;
+      }
+    }
+
+    input[type=submit] {
+      margin: calc(var(--pico-spacing)/ 2) var(--pico-spacing);
+    }
+  }
+  bm-bareme tbody td:last-child {
+    text-align: right;
+  }
+`
+
 const template = document.createElement("template")
 
 template.innerHTML = `
@@ -18,7 +47,7 @@ template.innerHTML = `
     <tbody>
     </tbody>
   </table>
-  <bm-bareme-add id="form_new"></bm-bareme-add>
+  <bm-bareme-add id="new-bareme-action"></bm-bareme-add>
   
 `
 

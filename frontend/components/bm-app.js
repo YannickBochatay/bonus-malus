@@ -1,6 +1,16 @@
 import "./bm-table.js"
 import { state, onStateChange, getUsersSummary } from "../state.js"
 
+const style = document.createElement("style")
+
+style.innerHTML = /*css*/`
+  bm-table:not(:first-child) {
+    display:block;
+    margin-top:3em;
+  }
+`
+document.head.append(style)
+
 getUsersSummary()
 
 class BmApp extends HTMLElement {

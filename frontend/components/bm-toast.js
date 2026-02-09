@@ -1,7 +1,6 @@
-const template =  document.createElement("template")
+const style = document.createElement("style")
 
-template.innerHTML = `
-  <style>
+style.innerHTML = /*css*/`
   bm-toast {
     position:fixed;
     display:block;
@@ -35,7 +34,13 @@ template.innerHTML = `
       margin:0;
     }
   }
-  </style>
+`
+
+document.head.append(style)
+
+const template =  document.createElement("template")
+
+template.innerHTML = `
   <section>
     <output role="status">
     </output>

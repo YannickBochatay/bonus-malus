@@ -1,6 +1,36 @@
 import "./bm-select.js"
 
-const template = document.createElement('template')
+const style = document.createElement("style")
+
+style.innerHTML = /*css*/`
+  caption {
+    font-size:1.5rem;
+    font-weight:bold;
+  }
+  .bonus-malus {
+    margin-bottom:0;
+
+    td, th {
+      text-align: center;
+      box-sizing: border-box;
+      width:50%;
+    }
+  }
+  .bilan {
+    width:250px;
+    margin-left:auto;
+    margin-right:auto;
+
+    td:last-child {
+      text-align: right;
+    }
+  }
+`
+
+document.head.append(style)
+
+
+const template = document.createElement("template")
 
 template.innerHTML = `
   <table class="bonus-malus">
@@ -31,15 +61,11 @@ template.innerHTML = `
   <table class="bilan">
     <tr>
       <th>Total</th>
-      <td>
-        <a href="pages/user/?user=xxx" class="total"></a>
-      </td>
+      <td class="total"></td>
     </tr>
     <tr>
-      <th>Dépenses</th>
-      <td>
-        <a href="pages/user/?user=xxx#depenses" class="depenses"></a>
-      </td>
+      <th>Récompenses</th>
+      <td class="depenses"></td>
     </tr>
     <tr>
       <th>Reste</th>
@@ -87,9 +113,8 @@ class BmTable extends HTMLElement {
   #setUser() {
     this.querySelector(".user").textContent = this.user
         
-    for (const node of this.querySelectorAll("a")) {
-      node.href = node.href.replace(/user=\w+/, "user=" + this.user)
-    }
+    const node = this.querySelector("a.user")
+    node.href = node.href.replace(/user=\w+/, "user=" + this.user)
 
     for (const node of this.querySelectorAll("[user]")) {
       node.setAttribute("user", this.user)
