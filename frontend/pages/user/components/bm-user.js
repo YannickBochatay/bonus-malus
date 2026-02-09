@@ -9,7 +9,7 @@ template.innerHTML = `
   <h2>${user}</h2>
   <div role="group" id="tabs">
     <a href="#actions" role="button" class="secondary">Actions</a>
-    <a href="#depenses" role="button" class="secondary outline">Dépenses</a>
+    <a href="#depenses" role="button" class="secondary outline">Récompenses</a>
   </div>
   <bm-router>
     <bm-actions id="actions" user="${user}"></bm-actions>

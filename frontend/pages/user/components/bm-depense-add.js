@@ -4,13 +4,13 @@ import { withToast } from "../../../components/bm-toast.js"
 const template = document.createElement("template")
 
 template.innerHTML = `
-  <h4>Ajouter une dépense</h4>
+  <h4>Ajouter une récompense</h4>
   <form>
     <input
       type="text"
       name="descript"
-      placeholder="Objet de la dépense"
-      aria-label="Objet de la dépense"
+      placeholder="Objet de la récompense"
+      aria-label="Objet de la récompense"
       required
     >
     <fieldset role="group">
