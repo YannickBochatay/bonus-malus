@@ -58,7 +58,7 @@ class BmUserEdit extends HTMLElement {
   #handleInput = () => {
     if (this.user === this.#inputUser.value) {
       this.#inputSubmit.hidden = true
-      this.#inputReset.hidden = this.deletable
+      this.#inputReset.hidden = !this.deletable
     } else {
       this.#inputSubmit.hidden = false
       this.#inputReset.hidden = true
