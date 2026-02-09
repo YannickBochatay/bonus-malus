@@ -32,7 +32,7 @@ class BmAction extends HTMLTableRowElement {
 
   #update() {
     this.children[0].textContent = this.action
-    this.children[1].textContent = this.date
+    this.children[1].textContent = this.date && new Date(this.date).toLocaleDateString()
     this.children[2].textContent = this.valeur
   }
 
