@@ -1,9 +1,10 @@
-import { removeBaremeAction } from "../state/main-state.js"
-import { withToast } from "./bm-toast.js"
+import { removeAction } from "../state.js"
+import { withToast } from "../../../components/bm-toast.js"
 
 const template = document.createElement("template")
 
 template.innerHTML = `
+  <td></td>
   <td></td>
   <td></td>
   <td>
@@ -11,27 +12,33 @@ template.innerHTML = `
   </td>
 `
 
-class BmBaremeAction extends HTMLTableRowElement {
+class BmAction extends HTMLTableRowElement {
 
   constructor() {
     super()
     this.append(template.content.cloneNode(true))
   }
 
-  static observedAttributes = ["id", "action", "valeur"]
+  static observedAttributes = ["id", "action", "date", "valeur"]
 
   get action() { return this.getAttribute("action") }
   set action(value) { this.setAttribute("action", value) }
+
+  get date() { return this.getAttribute("date") }
+  set date(value) { this.setAttribute("date", value) }
 
   get valeur() { return this.getAttribute("valeur") }
   set valeur(value) { this.setAttribute("valeur", value) }
 
   #update() {
     this.children[0].textContent = this.action
-    this.children[1].textContent = this.valeur
+    this.children[1].textContent = this.date && new Date(this.date).toLocaleDateString()
+    this.children[2].textContent = this.valeur
   }
 
-  #handleRemove = () => withToast(() => removeBaremeAction(this.id))
+  #handleRemove = () => {
+    withToast(() => removeAction(this.id))
+  }
 
   connectedCallback() {
     this.#update()
@@ -43,4 +50,4 @@ class BmBaremeAction extends HTMLTableRowElement {
   }
 }
 
-customElements.define("bm-bareme-action", BmBaremeAction, { extends : "tr" })
+customElements.define("bm-action", BmAction, { extends : "tr" })

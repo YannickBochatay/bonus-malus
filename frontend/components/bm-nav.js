@@ -1,11 +1,13 @@
+import { ROOT_URL } from "../utils.js"
+
 const template = document.createElement("template")
 
 template.innerHTML = `
   <nav>
     <ul>
       <li id="logo">
-        <a href="./">
-          <img src="assets/trophy.svg" alt="logo trophée">
+        <a href="${ROOT_URL}/">
+          <img src="${ROOT_URL}/assets/trophy.svg" alt="logo trophée">
         </a>
         <h1>Bonus/Malus</h1>
       </li>
@@ -14,16 +16,16 @@ template.innerHTML = `
       <summary aria-label="settings">☰</summary>
       <ul>
         <li>
-          <a href="./">Accueil</a>
+          <a href="${ROOT_URL}/">Accueil</a>
         </li>
         <li>
-          <a href="users.html">Joueur·ses</a>
+          <a href="${ROOT_URL}/pages/users">Joueur·ses</a>
         </li>
         <li>
-          <a href="bareme.html">Barème</a>
+          <a href="${ROOT_URL}/pages/bareme">Barème</a>
         </li>
         <li>
-          <a href="doc.html">Documentation</a>
+          <a href="${ROOT_URL}/pages/doc">Documentation</a>
         </li>
       </ul>
     </details>

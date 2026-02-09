@@ -1,4 +1,4 @@
-import { state, onStateChange, offStateChange, getBaremeActions, addUserAction } from "../state/main-state.js";
+import { state, onStateChange, offStateChange, getBaremeActions, addUserAction } from "../state.js";
 import { withToast } from "./bm-toast.js";
 
 getBaremeActions()

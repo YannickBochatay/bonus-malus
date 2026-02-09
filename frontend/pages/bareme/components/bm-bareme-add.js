@@ -1,5 +1,5 @@
-import { addBaremeAction } from "../state/main-state.js"
-import { withToast } from "./bm-toast.js"
+import { addBaremeAction } from "../state.js"
+import { withToast } from "../../../components/bm-toast.js"
 
 const template = document.createElement("template")
 

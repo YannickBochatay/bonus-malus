@@ -1,4 +1,4 @@
-import { createState, fetchJSON } from "./utils.js"
+import { createState, fetchJSON } from "../../utils.js"
 
 const initialState = {
   users : [],

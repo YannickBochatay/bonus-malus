@@ -5,7 +5,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <table class="bonus-malus">
     <caption>
-      <a href="user.html?user=xxx" title="voir les détails" class="user"></a>
+      <a href="pages/user/?user=xxx" title="voir les détails" class="user"></a>
     </caption>
     <thead>
       <tr>
@@ -32,13 +32,13 @@ template.innerHTML = `
     <tr>
       <th>Total</th>
       <td>
-        <a href="user.html?user=xxx" class="total"></a>
+        <a href="pages/user/?user=xxx" class="total"></a>
       </td>
     </tr>
     <tr>
       <th>Dépenses</th>
       <td>
-        <a href="user.html?user=xxx#depenses" class="depenses"></a>
+        <a href="pages/user/?user=xxx#depenses" class="depenses"></a>
       </td>
     </tr>
     <tr>

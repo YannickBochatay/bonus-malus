@@ -1,6 +1,6 @@
 import "./bm-bareme-action.js"
 import "./bm-bareme-add.js"
-import { state, getBaremeActions, onStateChange, offStateChange } from "../state/main-state.js"
+import { state, getBaremeActions, onStateChange, offStateChange } from "../state.js"
 
 getBaremeActions()
 

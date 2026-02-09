@@ -1,12 +1,8 @@
-export const BACKEND_BASE_URL = "https://yanb.pythonanywhere.com/"
-// export const BACKEND_BASE_URL = "http://127.0.0.1:5000/"
-
-export const PAGE_LENGTH = 20
-
-export const [,user] = /user=([^&]+)/.exec(decodeURI(location.search)) ?? []
+import { BACKEND_BASE_URL } from "./constants.js"
+export * from "./constants.js"
 
 export async function fetchJSON(url = "", options = {}) {
-  const res = await globalThis.fetch(BACKEND_BASE_URL + url, options)
+  const res = await fetch(BACKEND_BASE_URL + url, options)
   const data = await res.json()
   if (!res.ok) throw new Error(data.details)
   if (["POST", "PUT", "DELETE"].includes(options.method)) return data.details

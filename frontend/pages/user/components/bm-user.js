@@ -1,7 +1,7 @@
 import "./bm-actions.js"
 import "./bm-depenses.js"
-import "./bm-router.js"
-import { user } from "../state/utils.js"
+import "../../../components/bm-router.js"
+import { user } from "../../../utils.js"
 
 const template = document.createElement("template");
 

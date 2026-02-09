@@ -1,5 +1,5 @@
-import { removeAction } from "../state/user-state.js"
-import { withToast } from "./bm-toast.js"
+import { removeDepense } from "../state.js"
+import { withToast } from "../../../components/bm-toast.js"
 
 const template = document.createElement("template")
 
@@ -12,32 +12,32 @@ template.innerHTML = `
   </td>
 `
 
-class BmAction extends HTMLTableRowElement {
+class BmDepense extends HTMLTableRowElement {
 
   constructor() {
     super()
     this.append(template.content.cloneNode(true))
   }
 
-  static observedAttributes = ["id", "action", "date", "valeur"]
+  static observedAttributes = ["id", "descript", "date", "cout"]
 
-  get action() { return this.getAttribute("action") }
-  set action(value) { this.setAttribute("action", value) }
+  get descript() { return this.getAttribute("descript") }
+  set descript(value) { this.setAttribute("descript", value) }
 
   get date() { return this.getAttribute("date") }
   set date(value) { this.setAttribute("date", value) }
 
-  get valeur() { return this.getAttribute("valeur") }
-  set valeur(value) { this.setAttribute("valeur", value) }
+  get cout() { return this.getAttribute("cout") }
+  set cout(value) { this.setAttribute("cout", value) }
 
   #update() {
-    this.children[0].textContent = this.action
+    this.children[0].textContent = this.descript
     this.children[1].textContent = this.date && new Date(this.date).toLocaleDateString()
-    this.children[2].textContent = this.valeur
+    this.children[2].textContent = this.cout
   }
 
   #handleRemove = () => {
-    withToast(() => removeAction(this.id))
+    withToast(() => removeDepense(this.id))
   }
 
   connectedCallback() {
@@ -50,4 +50,4 @@ class BmAction extends HTMLTableRowElement {
   }
 }
 
-customElements.define("bm-action", BmAction, { extends : "tr" })
+customElements.define("bm-depense", BmDepense, { extends : "tr" })

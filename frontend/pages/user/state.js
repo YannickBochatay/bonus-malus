@@ -1,4 +1,4 @@
-import { user, createState, fetchJSON, PAGE_LENGTH } from "./utils.js"
+import { user, createState, fetchJSON, PAGE_LENGTH } from "../../utils.js"
 
 const initialState = {
   actions : [],

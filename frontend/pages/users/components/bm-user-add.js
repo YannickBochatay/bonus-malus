@@ -1,5 +1,5 @@
-import { addUser } from "../state/main-state.js"
-import { withToast } from "./bm-toast.js"
+import { addUser } from "../state.js"
+import { withToast } from "../../../components/bm-toast.js"
 
 const template = document.createElement("template")
 

@@ -1,6 +1,6 @@
 import "./bm-user-edit.js"
 import "./bm-user-add.js"
-import { state, onStateChange, getUsersSummary } from "../state/main-state.js"
+import { state, onStateChange, getUsersSummary } from "../state.js"
 
 const template = document.createElement("template")
 
