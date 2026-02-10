@@ -1,14 +1,3 @@
-import { BACKEND_BASE_URL } from "./constants.js"
-export * from "./constants.js"
-
-export async function fetchJSON(url = "", options = {}) {
-  const res = await fetch(BACKEND_BASE_URL + url, options)
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.details)
-  if (["POST", "PUT", "DELETE"].includes(options.method)) return data.details
-  else return data
-}
-
 export function createState(initialState) {
 
   const listeners = {};

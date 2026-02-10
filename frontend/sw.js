@@ -1,5 +1,5 @@
 // La version du cache
-const VERSION = "v1.14";
+const VERSION = "v1.15";
 
 // Le nom du cache
 const CACHE_NAME = `bonus-malus-${VERSION}`;
@@ -7,21 +7,25 @@ const CACHE_NAME = `bonus-malus-${VERSION}`;
 // Les ressources statiques nécessaires au fonctionnement de l'application
 // find . -type f -printf '"%p",\n'
 const APP_STATIC_RESOURCES = [
-  "./",
+  "./manifest.json",
+  "./lib/utils.js",
+  "./lib/createState.js",
+  "./config.js",
   "./assets/trophy.svg",
   "./assets/pico.min.css",
   "./assets/styles.css",
+  "./assets/icons/icon-192.png",
+  "./assets/icons/icon-512.png",
   "./components/bm-router.js",
   "./components/bm-toast.js",
   "./components/bm-nav.js",
-  "./components/bm-app.js",
-  "./components/bm-select.js",
-  "./components/bm-table.js",
-  "./index.html",
-  "./manifest.json",
-  "./utils.js",
-  "./state.js",
-  "./constants.js",
+  "./pages/home/",
+  "./pages/home/index.html",
+  "./pages/home/components/bm-app.js",
+  "./pages/home/components/bm-select.js",
+  "./pages/home/components/bm-table.js",
+  "./pages/home/state.js",
+  "./pages/users/",
   "./pages/users/index.html",
   "./pages/users/components/bm-users.js",
   "./pages/users/components/bm-user-edit.js",
@@ -33,20 +37,17 @@ const APP_STATIC_RESOURCES = [
   "./pages/user/components/bm-depense-add.js",
   "./pages/user/components/bm-actions.js",
   "./pages/user/components/bm-action.js",
+  "./pages/user/",
   "./pages/user/index.html",
   "./pages/user/state.js",
+  "./pages/doc/",
   "./pages/doc/index.html",
+  "./pages/bareme/",
+  "./pages/bareme/index.html",
   "./pages/bareme/state.js",
   "./pages/bareme/components/bm-bareme-action.js",
   "./pages/bareme/components/bm-bareme-add.js",
-  "./pages/bareme/components/bm-bareme.js",
-  "./pages/bareme/index.html",
-  "https://yanb.pythonanywhere.com/",
-  "https://yanb.pythonanywhere.com/bareme",
-  "https://yanb.pythonanywhere.com/Aur%C3%A9lien/actions",
-  "https://yanb.pythonanywhere.com/Aur%C3%A9lien/depenses",
-  "https://yanb.pythonanywhere.com/Johan/actions",
-  "https://yanb.pythonanywhere.com/Johan/depenses"
+  "./pages/bareme/components/bm-bareme.js"
 ];
 
 // Lors de l'installation, on met en cache les ressources statiques
@@ -82,28 +83,20 @@ self.addEventListener("activate", (event) => {
 // requêtes au serveur et on répond avec les réponses en cache
 // plutôt que de passer par le réseau
 self.addEventListener("fetch", (event) => {
-  // Ne pas intercepter les requêtes non‑GET (POST, PUT, …)
-  if (event.request.method !== 'GET') return
 
-  if (event.request.mode === "navigate") {
-    event.respondWith(caches.match(event.request.url))
-    return
-  }
+  if (event.request.method !== 'GET') return
 
   if (/(yanb\.pythonanywhere\.com|127\.0\.0\.1:5000)/.test(event.request.url)) {
     event.respondWith(
       (async () => {
         try {
           const networkResp = await fetch(event.request)
-          // On met à jour le cache avec la réponse fraîche
           const copy = networkResp.clone()
           const cache = await caches.open(CACHE_NAME)
           cache.put(event.request, copy)
           return networkResp;
         } catch (e) {
-          // Si le réseau échoue, on cherche dans le cache
           const cached = await caches.match(event.request)
-          // Si rien en cache, on peut retourner une réponse d’erreur générique
           return cached || new Response(JSON.stringify({ details : "Vous êtes hors ligne" }), {
             status: 503,
             headers: {'Content-Type':'application/json'}
@@ -111,20 +104,22 @@ self.addEventListener("fetch", (event) => {
         }
       })()
     );
-    return // on a déjà traité la requête
+    return
   }
 
   // Pour toutes les autres requêtes, on passera par le cache
   event.respondWith(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
-      const cachedResponse = await cache.match(event.request.url);
-      if (cachedResponse) {
-        // On renvoie la réponse mise en cache si elle y est disponible
-        return cachedResponse;
-      }
-      // Si la ressource n'est pas dans le cache, on renvoie une 404.
-      return new Response(null, { status: 404 });
+      const cachedResponse = await cache.match(event.request, { ignoreSearch : true });
+      if (cachedResponse) return cachedResponse
+      
+      return new Response(
+        JSON.stringify({ details : "Vous êtes hors ligne et la ressource n'est pas en cache" }),
+        {
+          status: 503,
+          headers: {'Content-Type':'application/json'}
+        });
     })(),
   );
 });

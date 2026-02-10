@@ -35,7 +35,7 @@ const template = document.createElement("template")
 template.innerHTML = `
   <table class="bonus-malus">
     <caption>
-      <a href="pages/user/?user=xxx" title="voir les détails" class="user"></a>
+      <a href="../user/?user=xxx" title="voir les détails" class="user"></a>
     </caption>
     <thead>
       <tr>

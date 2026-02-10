@@ -1,6 +1,6 @@
 import "./bm-depense.js"
 import "./bm-depense-add.js"
-import { PAGE_LENGTH } from "../../../utils.js"
+import { PAGE_LENGTH } from "../../../lib/utils.js"
 import { state, onStateChange, offStateChange, getUserDepenses } from "../state.js"
 
 const template = document.createElement("template")

@@ -1,5 +1,5 @@
 import "./bm-action.js"
-import { PAGE_LENGTH } from "../../../utils.js"
+import { PAGE_LENGTH } from "../../../lib/utils.js"
 import { state, onStateChange, offStateChange, getUserActions } from "../state.js";
 
 const template = document.createElement("template")

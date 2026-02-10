@@ -1,5 +1,3 @@
-import { ROOT_URL } from "../utils.js"
-
 const style = document.createElement("style")
 
 style.innerHTML = /*css*/`
@@ -77,8 +75,8 @@ template.innerHTML = `
   <nav>
     <ul>
       <li id="logo">
-        <a href="${ROOT_URL}/">
-          <img src="${ROOT_URL}/assets/trophy.svg" alt="logo trophée">
+        <a href="../home/">
+          <img src="../../assets/trophy.svg" alt="logo trophée">
         </a>
         <h1>Bonus/Malus</h1>
       </li>
@@ -87,16 +85,16 @@ template.innerHTML = `
       <summary aria-label="settings">☰</summary>
       <ul>
         <li>
-          <a href="${ROOT_URL}/">Accueil</a>
+          <a href="../home/">Accueil</a>
         </li>
         <li>
-          <a href="${ROOT_URL}/pages/users">Joueur·ses</a>
+          <a href="../users/">Joueur·ses</a>
         </li>
         <li>
-          <a href="${ROOT_URL}/pages/bareme">Barème</a>
+          <a href="../bareme/">Barème</a>
         </li>
         <li>
-          <a href="${ROOT_URL}/pages/doc">Documentation</a>
+          <a href="../doc/">Documentation</a>
         </li>
       </ul>
     </details>

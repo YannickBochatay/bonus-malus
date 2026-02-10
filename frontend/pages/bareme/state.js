@@ -1,4 +1,4 @@
-import { createState, fetchJSON } from "../../utils.js"
+import { createState, fetchJSON } from "../../lib/utils.js"
 
 const initialState = { bareme : [] }
 
