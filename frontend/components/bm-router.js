@@ -1,6 +1,6 @@
 let template = document.createElement("template");
 
-template.innerHTML = `
+template.innerHTML = /*css*/`
 <style>
   bm-router {
     display:block;
