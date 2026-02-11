@@ -3,6 +3,7 @@
   "short_name": "Bonus/Malus",
   "description": "Définissez un barême et récompensez vos enfants",
   "start_url": "/bonus-malus/frontend/pages/home/",
+  "scope" : "/bonus-malus/frontend/",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",

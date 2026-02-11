@@ -1,5 +1,5 @@
 // La version du cache
-const VERSION = "v1.16";
+const VERSION = "v1.17";
 
 // Le nom du cache
 const CACHE_NAME = `bonus-malus-${VERSION}`;
@@ -9,7 +9,6 @@ const CACHE_NAME = `bonus-malus-${VERSION}`;
 const APP_STATIC_RESOURCES = [
   "./manifest.json",
   "./lib/utils.js",
-  "./lib/createState.js",
   "./config.js",
   "./assets/trophy.svg",
   "./assets/pico.min.css",
@@ -79,13 +78,12 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Lors de la récupération des ressources, on intercepte les
-// requêtes au serveur et on répond avec les réponses en cache
-// plutôt que de passer par le réseau
+// Interception des requêtes serveur
 self.addEventListener("fetch", (event) => {
 
   if (event.request.method !== 'GET') return
 
+  // pour les appels à l'api backend, réseau en priorité, cache sinon
   if (/(yanb\.pythonanywhere\.com|127\.0\.0\.1:5000)/.test(event.request.url)) {
     event.respondWith(
       (async () => {
@@ -107,7 +105,7 @@ self.addEventListener("fetch", (event) => {
     return
   }
 
-  // Pour toutes les autres requêtes, on passera par le cache
+  // Pour toutes les autres requêtes, on passe par le cache
   event.respondWith(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
