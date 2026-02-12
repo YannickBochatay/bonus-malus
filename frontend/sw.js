@@ -1,5 +1,5 @@
 // La version du cache
-const VERSION = "v1.17";
+const VERSION = "v1.18";
 
 // Le nom du cache
 const CACHE_NAME = `bonus-malus-${VERSION}`;
@@ -36,6 +36,7 @@ const APP_STATIC_RESOURCES = [
   "./pages/user/components/bm-depense-add.js",
   "./pages/user/components/bm-actions.js",
   "./pages/user/components/bm-action.js",
+  "./pages/user/components/bm-action-add.js",
   "./pages/user/",
   "./pages/user/index.html",
   "./pages/user/state.js",

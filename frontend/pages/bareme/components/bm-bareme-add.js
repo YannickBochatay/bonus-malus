@@ -34,7 +34,7 @@ template.innerHTML = `
   <form id="new-bareme-action">
     <input name="action" type="text" aria-label="nouvelle action" placeholder="Action" required>
     <input name="valeur" type="number" aria-label="nouvelle valeur" placeholder="Valeur" required>
-    <input type="submit" value="+" class="icon-button">
+    <input type="submit" value="+" class="icon-button" title="Ajouter une action">
   </form>
 `
 

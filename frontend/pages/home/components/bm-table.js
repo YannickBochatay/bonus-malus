@@ -3,12 +3,17 @@ import "./bm-select.js"
 const style = document.createElement("style")
 
 style.innerHTML = /*css*/`
-  caption {
-    font-size:1.5rem;
-    font-weight:bold;
-  }
   .bonus-malus {
     margin-bottom:0;
+
+    caption {
+      font-size:1.5rem;
+      font-weight:bold;
+    }
+
+    a:not(:hover) {
+      text-decoration:none;
+    }
 
     td, th {
       text-align: center;
@@ -24,6 +29,10 @@ style.innerHTML = /*css*/`
     td:last-child {
       text-align: right;
     }
+
+    a:not(:hover) {
+      text-decoration:none;
+    }
   }
 `
 
@@ -35,7 +44,8 @@ const template = document.createElement("template")
 template.innerHTML = `
   <table class="bonus-malus">
     <caption>
-      <a href="../user/?user=xxx" title="voir les détails" class="user"></a>
+      <span class="user"></span>
+      <a href="../user/?user=xxx" title="Voir les détails">🔍︎</a>
     </caption>
     <thead>
       <tr>
@@ -55,6 +65,7 @@ template.innerHTML = `
         <td>
           <select user="" type="malus" is="bm-select">
         </td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -62,10 +73,16 @@ template.innerHTML = `
     <tr>
       <th>Total</th>
       <td class="total"></td>
+      <td>
+        <a href="../user/?user=xxx#actions" title="Voir les détails">🔍︎</a>
+      </td>
     </tr>
     <tr>
       <th>Récompenses</th>
       <td class="depenses"></td>
+      <td>
+        <a href="../user/?user=xxx#depenses" title="Voir les détails">🔍︎</a>
+      </td>
     </tr>
     <tr>
       <th>Reste</th>
@@ -113,8 +130,9 @@ class BmTable extends HTMLElement {
   #setUser() {
     this.querySelector(".user").textContent = this.user
         
-    const node = this.querySelector("a.user")
-    node.href = node.href.replace(/user=\w+/, "user=" + this.user)
+    for (const node of this.querySelectorAll("a")) {
+      node.href = node.href.replace(/user=\w+/, "user=" + this.user)
+    }
 
     for (const node of this.querySelectorAll("[user]")) {
       node.setAttribute("user", this.user)
