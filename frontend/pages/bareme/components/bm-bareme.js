@@ -12,6 +12,8 @@ style.innerHTML = /*css*/`
   }
 `
 
+document.head.append(style)
+
 const template = document.createElement("template")
 
 template.innerHTML = `
