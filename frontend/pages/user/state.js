@@ -2,10 +2,24 @@ import { user, createState, fetchJSON, PAGE_LENGTH } from "../../lib/utils.js"
 
 const initialState = {
   actions : [],
-  depenses : []
+  depenses : [],
+  bareme : []
 }
 
 export const { state, onStateChange, offStateChange } = createState(initialState)
+
+export async function getBaremeActions() {
+  state.bareme = await fetchJSON("bareme")
+}
+
+export async function addUserAction(data) {
+  const msg = await fetchJSON(user + "/actions", {
+    method : "POST",
+    body : data
+  })
+  await getUserActions()
+  return msg
+}
 
 export async function getUserActions(page = 1) {
   const { count, list } = await fetchJSON(`${user}/actions?p=${page}`)

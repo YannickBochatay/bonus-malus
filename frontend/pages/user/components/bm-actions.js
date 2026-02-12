@@ -1,10 +1,12 @@
 import "./bm-action.js"
+import "./bm-action-add.js"
 import { PAGE_LENGTH } from "../../../lib/utils.js"
 import { state, onStateChange, offStateChange, getUserActions } from "../state.js";
 
 const template = document.createElement("template")
 
 template.innerHTML = `
+  <bm-action-add></bm-action-add>
   <table>
     <thead>
       <tr>
