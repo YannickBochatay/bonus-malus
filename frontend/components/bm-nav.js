@@ -1,6 +1,9 @@
 const style = document.createElement("style")
 
 style.innerHTML = /*css*/`
+  nav {
+    position:relative;
+  }
   h1 {
     display:inline;
     font-size:var(--pico-font-size);
@@ -17,6 +20,11 @@ style.innerHTML = /*css*/`
   #logo img {
     height:100px;
     margin-right:20px;
+  }
+  #back-link {
+    position:absolute;
+    left:0;
+    top:120px;
   }
   nav details {
 
@@ -75,12 +83,13 @@ template.innerHTML = `
   <nav>
     <ul>
       <li id="logo">
-        <a href="../home/">
+        <a href="../home/" title="Accueil">
           <img src="../../assets/trophy.svg" alt="logo trophée">
         </a>
         <h1>Bonus/Malus</h1>
       </li>
     </ul>
+    <a href="../home/" id="back-link">‹ Retour</a>
     <details>
       <summary aria-label="settings">☰</summary>
       <ul>
@@ -113,6 +122,9 @@ class BmNav extends HTMLElement {
     summary.addEventListener("click", () => {
       summary.textContent = details.open ? "☰" : "X"
     })
+    if (String(location).includes("pages/home")) {
+      this.querySelector("#back-link").hidden = true
+    }
   }
 }
 
