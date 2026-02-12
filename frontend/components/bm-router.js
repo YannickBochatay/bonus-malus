@@ -13,6 +13,7 @@ template.innerHTML = /*css*/`
   bm-router > *:has(:target),
   bm-router > *:target bm-router > *:first-child {
     display:block;
+    scroll-margin-top: 1000px;
   }
 </style>
 <slot></slot>
