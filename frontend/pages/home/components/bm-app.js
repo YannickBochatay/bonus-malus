@@ -1,5 +1,5 @@
 import "./bm-table.js"
-import { state, onStateChange, getUsersSummary } from "../state.js"
+import { state, onStateChange, offStateChange, getUsersSummary } from "../state.js"
 
 const style = document.createElement("style")
 
@@ -28,6 +28,7 @@ class BmApp extends HTMLElement {
 
   connectedCallback() {
     onStateChange("users", this.#update)
+    if (state.users.length) this.#update()
   }
 
   disconnectedCallback() {

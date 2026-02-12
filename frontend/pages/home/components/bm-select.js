@@ -1,7 +1,7 @@
-import { state, onStateChange, offStateChange, getBaremeActions, addUserAction } from "../state.js";
+import { state, getBaremeActions, addUserAction } from "../state.js";
 import { withToast } from "../../../components/bm-toast.js";
 
-getBaremeActions()
+const promise = getBaremeActions()
 
 const style = document.createElement("style")
 
@@ -41,14 +41,12 @@ class BmSelect extends HTMLSelectElement {
       return action.valeur > 0 && this.type === "bonus" || action.valeur < 0 && this.type === "malus"
     })
 
-    for (const [index, action] of actions.entries()) {
-      const option = this.children[index + 1] ?? document.createElement("option")
+    for (const action of actions) {
+      const option = document.createElement("option")
       option.value = action.id
       option.textContent = `${action.action} (${action.valeur>0?"+":""}${action.valeur})`
-      if (!option.parentNode) this.append(option)
+      this.append(option)
     }
-
-    while (this.children.length > actions.length + 1) this.lastElementChild.remove()
   }
 
   get user() {
@@ -61,7 +59,6 @@ class BmSelect extends HTMLSelectElement {
 
   #handleSubmit = async () => {
     let data = new FormData()
-    data.append("joueur", this.user)
     data.append("action", this.value)
 
     withToast(() => addUserAction(this.user, data))
@@ -72,12 +69,7 @@ class BmSelect extends HTMLSelectElement {
     this.addEventListener("change", this.#handleSubmit)
     this.classList.add(this.type)
     this.setAttribute("aria-label", "sélection d'un " + this.type)
-    onStateChange("bareme", this.#setOptions)
-    this.#setOptions()
-  }
-
-  disconnectedCallback() {
-    offStateChange("bareme", this.#setOptions)
+    promise.then(this.#setOptions)
   }
 }
 
