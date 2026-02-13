@@ -11,10 +11,6 @@ style.innerHTML = /*css*/`
       font-weight:bold;
     }
 
-    a:not(:hover) {
-      text-decoration:none;
-    }
-
     td, th {
       text-align: center;
       box-sizing: border-box;
@@ -29,10 +25,6 @@ style.innerHTML = /*css*/`
     td:last-child {
       text-align: right;
     }
-
-    a:not(:hover) {
-      text-decoration:none;
-    }
   }
 `
 
@@ -44,8 +36,7 @@ const template = document.createElement("template")
 template.innerHTML = `
   <table class="bonus-malus">
     <caption>
-      <span class="user"></span>
-      <a href="../user/?user=xxx" title="Voir les détails">🔍︎</a>
+      <a href="../user/?user=xxx" title="Voir les détails" class="user"></a>
     </caption>
     <thead>
       <tr>

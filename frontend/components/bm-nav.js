@@ -21,11 +21,6 @@ style.innerHTML = /*css*/`
     height:100px;
     margin-right:20px;
   }
-  #back-link {
-    position:absolute;
-    left:0;
-    top:120px;
-  }
   nav details {
 
       position:absolute;
@@ -85,11 +80,12 @@ template.innerHTML = `
       <li id="logo">
         <a href="../home/" title="Accueil">
           <img src="../../assets/trophy.svg" alt="logo trophée">
+          <br>
+          <span id="back-link">‹ Retour</span>
         </a>
         <h1>Bonus/Malus</h1>
       </li>
     </ul>
-    <a href="../home/" id="back-link">‹ Retour</a>
     <details>
       <summary aria-label="settings">☰</summary>
       <ul>
